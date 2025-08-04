@@ -1,0 +1,58 @@
+/* Login */
+body {
+  background: url('../images/bg.jpg') no-repeat center center fixed;
+  background-size: cover;
+  font-family: Arial, sans-serif;
+}
+
+
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.system-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #ffffff;
+  text-shadow: 1px 1px 2px black;
+  padding: 10px;
+  border: 2px solid black; /* Border hitam */
+  border-radius: 8px;       /* Sudut melengkung (opsional) */
+  display: inline-block;    /* Supaya border hanya mengelilingi teks */
+  background-color: rgba(0, 0, 0, 0.7); /* Opsional: semi-transparan */
+}
+
+
+.login-box {
+  padding: 2rem;
+  border-radius: 12px;
+  background-color: white;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+/*dashboard*/
+body {
+  background-color: #f7f9fc;
+}
+
+.navbar-brand {
+  font-weight: bold;
+}
+
+.card {
+  border: none;
+  border-radius: 12px;
+}
+
+    

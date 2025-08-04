@@ -1,0 +1,41 @@
+/* dashboard.css */
+body {
+  background: red !important;
+}
+
+
+#wrapper {
+  display: block;
+}
+
+#sidebar-wrapper {
+  padding: 10px 20px;
+  width: 250px;
+  min-height: 100vh;
+}
+
+#page-content-wrapper {
+  flex: 1;
+  background-color: #f8f9fa;
+}
+
+.card h3 {
+  font-size: 1.5rem;
+  margin-top: 5px;
+}
+
+.nav-link {
+  padding: 10px 15px;
+  color: white;
+}
+
+.nav-link:hover {
+  background-color: #343a40;
+  color: #fff;
+}
+
+ul.collapse li a {
+  padding-left: 30px;
+  font-size: 14px;
+}
+

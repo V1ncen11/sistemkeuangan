@@ -14,13 +14,17 @@ use App\Http\Controllers\HalutamaController;
 |
 */
 
-use Illuminate\Support\Facades\View;
 
-Route::get('/halutama', [HalutamaController::class, 'index'])->name('halutama');
+
+Route::get('/', [HalutamaController::class, 'index'])->name('halutama');
+
 
 Route::get('/siswa',[SiswaController::class, 'index'])->name('siswa');
 Route::get('/tambahsiswa/{kelas}/{jurusan}', [SiswaController::class, 'tambah'])->name('tambahsiswa');
 Route::post('/siswasimpan', [SiswaController::class, 'simpan'])->name('siswasimpan');
+Route::get('/siswa/{id}/edit', [SiswaController::class, 'edit'])->name('editsiswa');
+Route::put('/siswa/{id}', [SiswaController::class, 'update'])->name('updatesiswa');
+
 
 //DELETE//
 Route::DELETE('/hapussiswa/{id}', [SiswaController::class, 'hapus'])->name('hapussiswa');

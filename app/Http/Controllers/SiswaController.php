@@ -69,7 +69,9 @@ public function simpan(Request $request)
     ]);
 
     return redirect()->route('siswa')
-        ->with('success', 'Data siswa berhasil ditambahkan!');
+    ->with('success', 'Data siswa berhasil ditambahkan!')
+    ->with('jurusan_aktif', $request->jurusan);
+
 }
 
 public function hapus($id)
@@ -78,6 +80,24 @@ public function hapus($id)
     $siswa->delete();
 
     return redirect()->route('siswa')->with('success', 'Data siswa berhasil dihapus!');
+}
+
+public function edit($id)
+{
+    $siswa = Siswa::findOrFail($id);
+
+    // Ambil langsung dari kolom di tabel siswa
+    $kelas = $siswa->kelas;
+    $jurusan = $siswa->jurusan;
+
+    return view('siswa.edit_siswa', compact('siswa', 'kelas', 'jurusan'));
+}
+
+public function update(Request $request, $id){
+    $siswa = Siswa::findOrFail($id);
+    $siswa->nama = $request->nama;
+    $siswa->save();
+    return redirect()->route('siswa')->with('succsess','Data berhasil di Update');
 }
 
 

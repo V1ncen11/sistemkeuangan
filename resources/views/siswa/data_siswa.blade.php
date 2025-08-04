@@ -3,19 +3,10 @@
 
 @section('content')
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-@if(session('success'))
-    <div id="notif-success" class="alert alert-success alert-dismissible" role="alert" style="transition: all 0.5s ease;">
-        {{ session('success') }}
-    </div>
 
-    <script>
-        setTimeout(() => {
-            const notif = document.getElementById('notif-success');
-            notif.style.opacity = '0';
-            setTimeout(() => notif.style.display = 'none', 500); 
-        }, 3000);
-    </script>
-@endif
+
+    
+
 
 
 <div class="container mt-4">  
@@ -51,6 +42,14 @@
         </h2>
         <div id="collapse{{ $jurusan }}" class="accordion-collapse collapse" aria-labelledby="heading{{ $jurusan }}" data-bs-parent="#accordionJurusan">
           <div class="accordion-body">
+
+            @if(session('success') && session('jurusan_aktif') == $jurusan)
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+        
           <div class="mb-3 d-flex justify-content-between">
               <h5>Data Siswa Kelas X - {{ $jurusan }}</h5>
               <a href="{{ route('tambahsiswa', ['kelas' => 'X', 'jurusan' => $jurusan]) }}" class="btn btn-primary btn-sm">
@@ -59,11 +58,6 @@
 
 
             </div>
-            @if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
 
             <table class="table table-bordered table-striped">
               <thead>
@@ -92,7 +86,7 @@
                       <td>{{ $siswa->kelas }}</td>
                       <td>{{ $siswa->jurusan }}</td>
                       <td>
-                        <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                        <a href="{{ route('editsiswa', $siswa->id) }}" class="btn btn-sm btn-warning">Edit</a>
                         <button type="button" class="btn btn-sm btn-danger"
     data-bs-toggle="modal"
     data-bs-target="#confirmDeleteModal"

@@ -5,9 +5,9 @@
 
   <div class="container d-flex justify-content-center align-items-center vh-100">
   <div class="card shadow-sm p-4" style="min-width: 600px;">
-      <h4 class="mb-3 text-center">Tambah Data Siswa X</h4>
+      <h4 class="mb-3 text-center">Tambah Data Siswa XI</h4>
 
-      <form action="{{ route('siswasimpan') }}" method="POST">
+      <form action="{{ route('simpansiswakelasXI') }}" method="POST">
         @csrf
 
         {{-- Hidden value for backend (if needed) --}}

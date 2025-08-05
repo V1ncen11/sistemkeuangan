@@ -69,7 +69,7 @@ public function simpan(Request $request)
     ]);
 
     return redirect()->route('siswa')
-    ->with('success', 'Data siswa berhasil ditambahkan!')
+    ->with('success_add', 'Data siswa berhasil ditambahkan!')
     ->with('jurusan_aktif', $request->jurusan);
 
 }
@@ -97,10 +97,36 @@ public function update(Request $request, $id){
     $siswa = Siswa::findOrFail($id);
     $siswa->nama = $request->nama;
     $siswa->save();
-    return redirect()->route('siswa')->with('succsess','Data berhasil di Update');
+    return redirect()->route('siswa')
+        ->with('success', 'Data berhasil diupdate!');
+}
+//SISWA XI
+
+public function indexXI(){
+    $siswaXI = Siswa::where('kelas','XI')->get();
+    return view('siswa.siswaXI.data_siswaXI', compact('siswaXI'));
 }
 
 
+public function tambahXI(Request $request)
+    {
+        $kelas = $request->query('kelas');      
+        $jurusan = $request->query('jurusan');  
+        return view('siswa.siswaXI.tambah_siswaXI', compact('kelas', 'jurusan'));
+    }
+
+    public function simpanXI(Request $request)
+{
+    Siswa::create([
+        'nis' => $request->nis,
+        'nama' => $request->nama,
+        'kelas' => $request->kelas,
+        'jurusan' => $request->jurusan,
+    ]);
+    return redirect()->route('siswakelasXI')->with('success', 'Siswa berhasil ditambahkan');
+}
+
+    
    }
    
 

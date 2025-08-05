@@ -24,10 +24,13 @@ Route::get('/tambahsiswa/{kelas}/{jurusan}', [SiswaController::class, 'tambah'])
 Route::post('/siswasimpan', [SiswaController::class, 'simpan'])->name('siswasimpan');
 Route::get('/siswa/{id}/edit', [SiswaController::class, 'edit'])->name('editsiswa');
 Route::put('/siswa/{id}', [SiswaController::class, 'update'])->name('updatesiswa');
-
-
-//DELETE//
+//DELETE
 Route::DELETE('/hapussiswa/{id}', [SiswaController::class, 'hapus'])->name('hapussiswa');
+
+//SISWA KELAS XI
+Route::get('siswa/kelasXI',[SiswaController::class, 'indexXI'])->name('siswakelasXI');
+Route::get('tambahsiswa/kelasXI',[SiswaController::class, 'tambahXI'])->name('tambahsiswakelasXI');
+Route::post('simpansiswa/kelasXI',[SiswaController::class, 'simpanXI'])->name('simpansiswakelasXI');
 
 
 

@@ -5,28 +5,34 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
 
-    
+@if (session('success') || session('success_add'))
+    <div class="alert alert-success mt-2">
+        {{ session('success') ?? session('success_add') }}
+    </div>
+@endif
+
 
 
 
 <div class="container mt-4">  
-  <h3 class="mb-4">Data Siswa</h3>
+  <h3 class="mb-4">Data Siswa Kelas X</h3>
 
   <!-- Tabs Kelas -->
-  <ul class="nav nav-tabs" id="kelasTab" role="tablist">
-    <li class="nav-item" role="presentation">
-      <button class="nav-link active" id="kelasX-tab" data-bs-toggle="tab" data-bs-target="#kelasX" type="button" role="tab">Kelas X</button>
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link {{ request()->is('siswa/kelas-x') ? 'active' : '' }}" href="{{ route('siswa') }}">Kelas X</a>
     </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="kelasXI-tab" data-bs-toggle="tab" data-bs-target="#kelasXI" type="button" role="tab">Kelas XI</button>
+    <li class="nav-item">
+      <a class="nav-link {{ request()->is('siswa/kelas-xi') ? 'active' : '' }}" href="{{ route('siswakelasXI') }}">Kelas XI</a>
     </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="kelasXII-tab" data-bs-toggle="tab" data-bs-target="#kelasXII" type="button" role="tab">Kelas XII</button>
+    <li class="nav-item">
+      <a class="nav-link {{ request()->is('siswa/kelas-xii') ? 'active' : '' }}" href="#">Kelas XII</a>
     </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="alumni-tab" data-bs-toggle="tab" data-bs-target="#alumni" type="button" role="tab">Alumni</button>
+    <li class="nav-item">
+      <a class="nav-link {{ request()->is('siswa/alumni') ? 'active' : '' }}" href="#">Alumni</a>
     </li>
   </ul>
+  
 
  
 
@@ -42,14 +48,6 @@
         </h2>
         <div id="collapse{{ $jurusan }}" class="accordion-collapse collapse" aria-labelledby="heading{{ $jurusan }}" data-bs-parent="#accordionJurusan">
           <div class="accordion-body">
-
-            @if(session('success') && session('jurusan_aktif') == $jurusan)
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-        
           <div class="mb-3 d-flex justify-content-between">
               <h5>Data Siswa Kelas X - {{ $jurusan }}</h5>
               <a href="{{ route('tambahsiswa', ['kelas' => 'X', 'jurusan' => $jurusan]) }}" class="btn btn-primary btn-sm">
@@ -88,13 +86,13 @@
                       <td>
                         <a href="{{ route('editsiswa', $siswa->id) }}" class="btn btn-sm btn-warning">Edit</a>
                         <button type="button" class="btn btn-sm btn-danger"
-    data-bs-toggle="modal"
-    data-bs-target="#confirmDeleteModal"
-    data-id="{{ $siswa->id }}"
-    data-nama="{{ $siswa->nama }}"
-    data-url="{{ route('hapussiswa', $siswa->id) }}">
-    Hapus
-</button>
+                          data-bs-toggle="modal"
+                          data-bs-target="#confirmDeleteModal"
+                          data-id="{{ $siswa->id }}"
+                          data-nama="{{ $siswa->nama }}"
+                          data-url="{{ route('hapussiswa', $siswa->id) }}">
+                          Hapus
+                      </button>
 
 
 
@@ -120,23 +118,7 @@
 
 
 
-    <!-- Kelas XI -->
-    <div class="tab-pane fade" id="kelasXI" role="tabpanel">
-      <p class="text-muted">Data siswa kelas XI belum ditambahkan.</p>
-    </div>
-
-    <!-- Kelas XII -->
-    <div class="tab-pane fade" id="kelasXII" role="tabpanel">
-      <p class="text-muted">Data siswa kelas XII belum ditambahkan.</p>
-    </div>
-
-    <!-- Alumni -->
-    <div class="tab-pane fade" id="alumni" role="tabpanel">
-      <p class="text-muted">Data alumni belum ditambahkan.</p>
-    </div>
-  </div>
-</div>
-
+   
 <!-- Modal -->
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
   <div class="modal-dialog">

@@ -8,7 +8,7 @@
     </div>
 @endif
 <div class="container mt-4"> 
-    <h3>Data Siswa Kelas XI</h3>
+    <h3>Data Siswa Kelas XII</h3>
 
     <ul class="nav nav-tabs">
         <li class="nav-item">
@@ -25,7 +25,7 @@
         </li>
     </ul>
 
-    <div class="tab-pane fade show active" id="kelasXI" role="tabpanel" aria-labelledby="kelasXI-tab">
+    <div class="tab-pane fade show active" id="kelasXII" role="tabpanel" aria-labelledby="kelasXII-tab">
         <div class="accordion" id="accordionJurusan">
             @foreach (['AKL', 'MPLB', 'TKJ', 'TBSM'] as $jurusan)
                 <div class="accordion-item">
@@ -37,8 +37,8 @@
                     <div id="collapse{{ $jurusan }}" class="accordion-collapse collapse" aria-labelledby="heading{{ $jurusan }}" data-bs-parent="#accordionJurusan">
                         <div class="accordion-body">
                             <div class="mb-3 d-flex justify-content-between">
-                                <h5>Data Siswa Kelas XI - {{ $jurusan }}</h5>
-                                <a href="{{ route('tambahsiswakelasXI', ['kelas' => 'XI', 'jurusan' => $jurusan]) }}" class="btn btn-primary btn-sm">
+                                <h5>Data Siswa Kelas XII - {{ $jurusan }}</h5>
+                                <a href="{{ route('tambahsiswaXII', ['kelas' => 'XII', 'jurusan' => $jurusan]) }}" class="btn btn-primary btn-sm">
                                     + Tambah Siswa
                                 </a>
                             </div>
@@ -73,13 +73,13 @@
                                             <td>{{ $siswa->kelas }}</td>
                                             <td>{{ $siswa->jurusan }}</td>
                                             <td>
-                                                <a href="{{ route('editsiswaXI', $siswa->id) }}" class="btn btn-warning"><i class="fa-solid fa-pen"></i></a>
+                                                <a href="{{ route('editsiswaXII', $siswa->id) }}" class="btn btn-warning"><i class="fa-solid fa-pen"></i></a>
                                                 <button type="button" class="btn btn-sm btn-danger"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#confirmDeleteModal"
                                                     data-id="{{ $siswa->id }}"
                                                     data-nama="{{ $siswa->nama }}"
-                                                    data-url="{{ route('hapussiswaXI', $siswa->id) }}">
+                                                    data-url="{{ route('hapussiswaXII', $siswa->id) }}">
                                                     <i class="fa-solid fa-trash"></i>
                                                 </button>
                                                 <a href="#" class="btn btn-sm btn-success">Naik Kelas</a>

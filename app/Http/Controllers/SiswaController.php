@@ -25,7 +25,7 @@ class SiswaController extends Controller
    
            $query->where('jurusan', $jurusan_loop);
    
-           $data_per_jurusan[$jurusan_loop] = $query->paginate(10, ['*'], $jurusan_loop);
+           $data_per_jurusan[$jurusan_loop] = $query->paginate(5, ['*'], $jurusan_loop);
        }
    
        return view('siswa.data_siswa', compact(
@@ -85,8 +85,6 @@ public function hapus($id)
 public function edit($id)
 {
     $siswa = Siswa::findOrFail($id);
-
-    // Ambil langsung dari kolom di tabel siswa
     $kelas = $siswa->kelas;
     $jurusan = $siswa->jurusan;
 
@@ -102,10 +100,24 @@ public function update(Request $request, $id){
 }
 //SISWA XI
 
-public function indexXI(){
-    $siswaXI = Siswa::where('kelas','XI')->get();
-    return view('siswa.siswaXI.data_siswaXI', compact('siswaXI'));
+public function indexXI(Request $request)
+{
+    $kelas = $request->kelas ?? 'XI'; // default XI
+     $list_kelas = ['X', 'XI', 'XII'];
+    $list_jurusan = ['AKL', 'MPLB', 'TKJ', 'TBSM'];
+
+    $data_per_jurusan = [];
+
+    foreach ($list_jurusan as $jurusan_loop) {
+        $query = Siswa::query();
+        $query->where('kelas', $kelas)
+              ->where('jurusan', $jurusan_loop);
+
+        $data_per_jurusan[$jurusan_loop] = $query->paginate(5, ['*'], 'page_'.$jurusan_loop);
+    }
+    return view('siswa.siswaXI.data_siswaXI', compact('data_per_jurusan', 'list_jurusan', 'kelas'));
 }
+
 
 
 public function tambahXI(Request $request)
@@ -115,8 +127,7 @@ public function tambahXI(Request $request)
         return view('siswa.siswaXI.tambah_siswaXI', compact('kelas', 'jurusan'));
     }
 
-    public function simpanXI(Request $request)
-{
+    public function simpanXI(Request $request){
     Siswa::create([
         'nis' => $request->nis,
         'nama' => $request->nama,
@@ -125,6 +136,86 @@ public function tambahXI(Request $request)
     ]);
     return redirect()->route('siswakelasXI')->with('success', 'Siswa berhasil ditambahkan');
 }
+    public function editXI($id){
+        $siswa = Siswa::findOrFail($id);
+        $kelas=$siswa->kelas;
+        $jurusan=$siswa->jurusan;
+
+        return view('siswa.siswaXI.edit_siswaXI', compact('siswa','kelas','jurusan'));
+    } 
+
+    public function updateXI(Request $request, $id){
+        $siswa = Siswa::FindOrFail($id);
+        $siswa->nama = $request->nama;
+        $siswa->save();
+        return redirect()->route('siswakelasXI')
+        ->with('success', 'Data berhasil diupdate!');
+
+    }
+
+    public function hapusXI($id){
+        $siswa = Siswa::FindOrFail($id);
+        $siswa->delete();
+        return redirect()->route('siswakelasXI')
+        ->with('success', 'Data berhasil dihapus!');
+    }
+
+    //SISWA KELAS XII
+
+    public function indexXII(Request $request){
+        $kelas = $request->kelas ?? 'XII'; // default XI
+     $list_kelas = ['X', 'XI', 'XII'];
+    $list_jurusan = ['AKL', 'MPLB', 'TKJ', 'TBSM'];
+
+    $data_per_jurusan = [];
+
+    foreach ($list_jurusan as $jurusan_loop) {
+        $query = Siswa::query();
+        $query->where('kelas', $kelas)
+              ->where('jurusan', $jurusan_loop);
+
+        $data_per_jurusan[$jurusan_loop] = $query->paginate(5, ['*'], 'page_'.$jurusan_loop);
+    }
+    return view('siswa.siswaXII.data_siswaXII', compact('data_per_jurusan', 'list_jurusan', 'kelas'));
+    }
+
+    public function tambahXII(Request $request){
+        $kelas = $request->query('kelas');      
+        $jurusan = $request->query('jurusan');  
+        return view('siswa.siswaXII.tambah_siswaXII', compact('kelas', 'jurusan'));
+    }
+
+    public function simpanXII(Request $request){
+        Siswa::create([
+            
+            'nis' =>$request-> nis,
+            'nama' =>$request-> nama,
+            'kelas' =>$request-> kelas,
+            'jurusan' =>$request-> jurusan,
+        ]);
+        return redirect()->route('siswakelasXII')->with('success', 'Data berhasil ditambah!');
+    }
+
+    public function editXII($id){
+       $siswa = Siswa::FindOrFail($id);
+       $kelas=$siswa->kelas;
+       $jurusan=$siswa->jurusan;
+       return view('siswa.siswaXII.edit_siswaXII', compact('siswa','kelas','jurusan'));
+    }
+
+    public function updateXII(Request $request ,$id){
+        $siswa = Siswa::FindOrFail($id);
+        $siswa->nama = $request->nama;
+        $siswa->nama = $request->nama;
+        $siswa->save();
+        return redirect()->route('siswakelasXII')->with('success','Data berhasil diupdate!');
+    }
+
+    public function hapusXII(Request $request, $id){
+        $siswa = Siswa::FindOrFail($id);
+        $siswa->delete();
+        return redirect()->route('siswakelasXII')->with('success','Data berhasil dihapus!');
+    }
 
     
    }

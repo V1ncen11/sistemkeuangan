@@ -1,6 +1,6 @@
 /* dashboard.css */
 body {
-  background: red !important;
+  background: rgb(240, 237, 237) !important;
 }
 
 
@@ -38,4 +38,15 @@ ul.collapse li a {
   padding-left: 30px;
   font-size: 14px;
 }
+
+.nav-tabs .nav-link {
+  color: #333 !important; /* warna teks tab yang gak aktif */
+}
+
+.nav-tabs .nav-link.active {
+  color: #000 !important; /* warna teks tab yang aktif */
+  background-color: #fff;
+  border-color: #dee2e6 #dee2e6 #fff;
+}
+
 

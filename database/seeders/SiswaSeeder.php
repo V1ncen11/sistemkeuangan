@@ -1,6 +1,8 @@
 <?php
 
 namespace Database\Seeders;
+use App\Models\Siswa;
+use App\Models\Pembayaran;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,10 +17,10 @@ class SiswaSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('siswa')->insert([
-            'nis' => '10222075',
-            'nama' => 'Kevin Nurachman',
-            'jurusan' => 'TKJ',
+        $siswa = \DB::table('siswa')->insertGetId([
+            'nis' => '102220215',
+            'nama' => 'Kevin Nurachma',
+            'jurusan' => 'TBSM',
             'kelas' => 'X',
         ]);
     }

@@ -3,21 +3,13 @@
 
 @section('content')
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-
 @if (session('success') || session('success_add'))
     <div class="alert alert-success mt-2">
         {{ session('success') ?? session('success_add') }}
     </div>
 @endif
-
-
-
-
 <div class="container mt-4">  
   <h3 class="mb-4">Data Siswa Kelas X</h3>
-
-  <!-- Tabs Kelas -->
   <ul class="nav nav-tabs">
     <li class="nav-item">
       <a class="nav-link {{ request()->is('siswa/kelas-x') ? 'active' : '' }}" href="{{ route('siswa') }}">Kelas X</a>
@@ -26,19 +18,14 @@
       <a class="nav-link {{ request()->is('siswa/kelas-xi') ? 'active' : '' }}" href="{{ route('siswakelasXI') }}">Kelas XI</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link {{ request()->is('siswa/kelas-xii') ? 'active' : '' }}" href="#">Kelas XII</a>
+      <a class="nav-link {{ request()->is('siswa/kelas-xii') ? 'active' : '' }}" href="{{ route('siswakelasXII')}}">Kelas XII</a>
     </li>
     <li class="nav-item">
       <a class="nav-link {{ request()->is('siswa/alumni') ? 'active' : '' }}" href="#">Alumni</a>
     </li>
   </ul>
-  
-
- 
-
     <div class="tab-pane fade show active" id="kelasX" role="tabpanel" aria-labelledby="kelasX-tab">
   <div class="accordion" id="accordionJurusan">
-
     @foreach (['AKL', 'MPLB', 'TKJ', 'TBSM'] as $jurusan)
       <div class="accordion-item">
         <h2 class="accordion-header" id="heading{{ $jurusan }}">
@@ -53,12 +40,9 @@
               <a href="{{ route('tambahsiswa', ['kelas' => 'X', 'jurusan' => $jurusan]) }}" class="btn btn-primary btn-sm">
               + Tambah Siswa
             </a>
-
-
             </div>
-
             <table class="table table-bordered table-striped">
-              <thead>
+              <thead class="table-dark text-center">
                 <tr>
                   <th>No</th>
                   <th>NIS</th>
@@ -69,44 +53,36 @@
                 </tr>
               </thead>
               <tbody>
-
                 @php
                 $no= 1;
                 @endphp
                  @php
-        $pagination = $data_per_jurusan[$jurusan];
-    @endphp
+                $pagination = $data_per_jurusan[$jurusan];
+                @endphp
                 @foreach($pagination as $siswa) 
-                    <tr>
-                    <td>{{ $loop->iteration + ($pagination->currentPage() - 1) * $pagination->perPage() }}</td>
-                      <td>{{ $siswa->nis }}</td>
-                      <td>{{ $siswa->nama }}</td>
-                      <td>{{ $siswa->kelas }}</td>
-                      <td>{{ $siswa->jurusan }}</td>
-                      <td>
-                        <a href="{{ route('editsiswa', $siswa->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                        <button type="button" class="btn btn-sm btn-danger"
+                        <tr>
+                        <td>{{ $loop->iteration + ($pagination->currentPage() - 1) * $pagination->perPage() }}</td>
+                          <td>{{ $siswa->nis }}</td>
+                          <td>{{ $siswa->nama }}</td>
+                          <td>{{ $siswa->kelas }}</td>
+                          <td>{{ $siswa->jurusan }}</td>
+                          <td>
+                        <a href="{{ route('editsiswa', $siswa->id) }}" class="btn btn-warning"><i class="fa-solid fa-pen"></i></a>
+                        <button type="button" class="btn btn-danger"
                           data-bs-toggle="modal"
                           data-bs-target="#confirmDeleteModal"
                           data-id="{{ $siswa->id }}"
                           data-nama="{{ $siswa->nama }}"
                           data-url="{{ route('hapussiswa', $siswa->id) }}">
-                          Hapus
+                          <i class="fa-solid fa-trash"></i>
                       </button>
-
-
-
-                  
                         <a href="#" class="btn btn-sm btn-success">Naik Kelas</a>
                       </td>
                     </tr>
                 @endforeach
               </tbody>
             </table>
-            
             {{ $pagination->links('pagination::bootstrap-5') }}
-
-
           </div>
         </div>
       </div>
@@ -114,12 +90,6 @@
 
   </div> <!-- /accordion -->
 </div> <!-- /tab-pane kelasX -->
-
-
-
-
-   
-<!-- Modal -->
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
   <div class="modal-dialog">
     <form method="POST" id="deleteForm">
@@ -141,23 +111,16 @@
     </form>
   </div>
 </div>
-
 <script>
  const confirmDeleteModal = document.getElementById('confirmDeleteModal');
 confirmDeleteModal.addEventListener('show.bs.modal', function (event) {
   const button = event.relatedTarget;
   const nama = button.getAttribute('data-nama');
   const url = button.getAttribute('data-url'); // Ambil URL dari data-url
-
   const form = document.getElementById('deleteForm');
   form.action = url; // Set URL ke form
-
   document.getElementById('namaSiswa').textContent = nama;
 });
-
 </script>
-
-
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 @endsection

@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link href="{{ asset('css/dashboard.css') }}" rel="stylesheet" />
 </head>
 <body>
@@ -22,7 +23,7 @@
         <i class="bi bi-cash-coin me-2"></i> Transaksi <i class="bi bi-chevron-down float-end"></i>
       </a>
       <div class="collapse ms-3" id="submenuTransaksi">
-        <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0">Pembayaran</a>
+        <a href="{{ route('pembayaran')}}" class="list-group-item list-group-item-action bg-dark text-white border-0">Pembayaran</a>
         <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0">Pengeluaran</a>
         <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0">KAS</a>
         <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0">Tabungan Siswa</a>

@@ -3,9 +3,9 @@
 @section('content')
 <div class="container d-flex justify-content-center align-items-center vh-100">
   <div class="card shadow-sm p-4" style="min-width: 600px;">
-    <h4 class="mb-3 text-center">Edit Data Siswa X</h4>
+    <h4 class="mb-3 text-center">Edit Data Siswa XI</h4>
 
-    <form action="{{ route('updatesiswa', $siswa->id) }}" method="POST">
+    <form action="{{ route('updatesiswaXI' ,$siswa->id)}}" method="POST">
       @csrf
       @method('PUT')
 

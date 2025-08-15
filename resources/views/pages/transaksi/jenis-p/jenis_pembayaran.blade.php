@@ -1,4 +1,4 @@
-<!-- resources/views/jenis_pembayaran/index.blade.php -->
+
 @extends('layouts.app')
 
 @section('content')
@@ -19,6 +19,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Nama Jenis Pembayaran</th>
+                    <th>Kelas</th>
                     <th>Nominal</th>
                     <th>Aksi</th>
                 </tr>
@@ -28,14 +29,18 @@
                 <tr>
                     <td>{{ $jenis->id }}</td>
                     <td>{{ $jenis->nama_pembayaran }}</td>
+                    <td>{{ $jenis->tingkat_kelas }}</td>
                     <td>Rp {{ number_format($jenis->jumlah, 0, ',', '.') }}</td>
                     <td>
                         <a href="#" class="btn btn-sm btn-warning">Edit</a>
-                        <form action="#" method="POST" style="display:inline-block">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-sm btn-danger" onclick="return confirm('Yakin mau hapus?')">Hapus</button>
-                        </form>
+                        <button type="button" class="btn btn-danger"
+                          data-bs-toggle="modal"
+                          data-bs-target="#confirmDeleteModal"
+                          data-id="{{ $jenis->id }}"
+                          data-nama="{{ $jenis->nama }}"
+                          data-url="{{ route('jenis-pembayaran.destroy', $jenis->id) }}">
+                          <i class="fa-solid fa-trash"></i>
+                      </button>
                     </td>
                 </tr>
                 @empty
@@ -47,4 +52,40 @@
         </table>
     </div>
 </div>
-@endsection
+
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <form method="POST" id="deleteForm">
+        @csrf
+        @method('DELETE')
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="confirmDeleteLabel">Konfirmasi Hapus</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <p>Yakin mau hapus data <strong id="JenisPembayaran"></strong>?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-danger">Hapus</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script>
+    const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+   confirmDeleteModal.addEventListener('show.bs.modal', function (event) {
+     const button = event.relatedTarget;
+     const nama = button.getAttribute('data-nama');
+     const url = button.getAttribute('data-url'); // Ambil URL dari data-url
+   
+     const form = document.getElementById('deleteForm');
+     form.action = url; // Set URL ke form
+   
+     document.getElementById('JenisPembayaran').textContent = nama;
+   });
+   
+   </script>
+   @endsection

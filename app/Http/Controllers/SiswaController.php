@@ -12,12 +12,12 @@ class SiswaController extends Controller
        $jurusan = $request->jurusan ?? 'AKL'; // fallback ke 'AKL'
    
        $list_jurusan = ['AKL', 'MPLB', 'TKJ', 'TBSM'];
-       $list_kelas = ['X', 'XI', 'XII'];
+       $list_kelas = ['X', 'XI', 'XII','alumni'];
    
        $data_per_jurusan = [];
    
        foreach ($list_jurusan as $jurusan_loop) {
-           $query = Siswa::query();
+        $query = Siswa::with(['pembayaran.jenisPembayaran']);
    
            if ($kelas) {
                $query->where('kelas', $kelas);
@@ -96,14 +96,28 @@ public function update(Request $request, $id){
     $siswa->nama = $request->nama;
     $siswa->save();
     return redirect()->route('siswa')
-        ->with('success', 'Data berhasil diupdate!');
+        ->with('success', 'Data berhasil diupdate!');       
 }
+public function naikKelasX($id)
+{
+    $siswa = Siswa::findOrFail($id);
+
+    if ($siswa->kelas !== 'X') {
+        return redirect()->back()->with('error', 'Siswa ini bukan di kelas X.');
+    }
+
+    $siswa->kelas = 'XI';
+    $siswa->save();
+
+    return redirect()->back()->with('success', 'Siswa berhasil naik ke XI.');
+}
+
 //SISWA XI
 
 public function indexXI(Request $request)
 {
     $kelas = $request->kelas ?? 'XI'; // default XI
-     $list_kelas = ['X', 'XI', 'XII'];
+     $list_kelas = ['X', 'XI', 'XII','alumni'];
     $list_jurusan = ['AKL', 'MPLB', 'TKJ', 'TBSM'];
 
     $data_per_jurusan = [];
@@ -160,11 +174,25 @@ public function tambahXI(Request $request)
         ->with('success', 'Data berhasil dihapus!');
     }
 
+    public function naikkelasXI($id)
+{
+    $siswa = Siswa::findOrFail($id);
+
+    if ($siswa->kelas !== 'XI') {
+        return redirect()->back()->with('error', 'Siswa ini bukan di kelas XI.');
+    }
+
+    $siswa->kelas = 'XII';
+    $siswa->save();
+
+    return redirect()->back()->with('success', 'Siswa berhasil naik ke XII.');
+}
+
     //SISWA KELAS XII
 
     public function indexXII(Request $request){
         $kelas = $request->kelas ?? 'XII'; // default XI
-     $list_kelas = ['X', 'XI', 'XII'];
+     $list_kelas = ['X', 'XI', 'XII','alumni'];
     $list_jurusan = ['AKL', 'MPLB', 'TKJ', 'TBSM'];
 
     $data_per_jurusan = [];
@@ -215,6 +243,41 @@ public function tambahXI(Request $request)
         $siswa = Siswa::FindOrFail($id);
         $siswa->delete();
         return redirect()->route('siswakelasXII')->with('success','Data berhasil dihapus!');
+    }
+
+    public function lulus($id)
+{
+    $siswa = Siswa::findOrFail($id);
+    $siswa->kelas = 'Alumni';
+    $siswa->save();
+
+    return redirect()->back()->with('success', 'Siswa berhasil diluluskan ke Alumni.');
+}
+
+
+
+//alumni
+    public function indexalumn(Request $request){
+        $kelas = $request->kelas ?? 'alumni'; // default XI
+     $list_kelas = ['X', 'XI', 'XII','alumni'];
+    $list_jurusan = ['AKL', 'MPLB', 'TKJ', 'TBSM'];
+
+    $data_per_jurusan = [];
+
+    foreach ($list_jurusan as $jurusan_loop) {
+        $query = Siswa::query();
+        $query->where('kelas', $kelas)
+              ->where('jurusan', $jurusan_loop);
+
+        $data_per_jurusan[$jurusan_loop] = $query->paginate(5, ['*'], 'page_'.$jurusan_loop);
+    }
+    return view('siswa.alumni.data_alumni', compact('data_per_jurusan', 'list_jurusan', 'kelas'));
+    }
+
+    public function hapusalumn(Request $request, $id){
+        $siswa = Siswa::FindOrFail($id);
+        $siswa->delete();
+        return redirect()->route('dataalumni')->with('success','Data berhasil dihapus!');
     }
 
     

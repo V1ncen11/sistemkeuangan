@@ -8,7 +8,7 @@
     </div>
 @endif
 <div class="container mt-4"> 
-    <h3>Data Siswa Kelas XII</h3>
+    <h3>Data Alumni</h3>
 
     <ul class="nav nav-tabs">
         <li class="nav-item">
@@ -25,7 +25,7 @@
         </li>
     </ul>
 
-    <div class="tab-pane fade show active" id="kelasXII" role="tabpanel" aria-labelledby="kelasXII-tab">
+    <div class="tab-pane fade show active" id="alumni" role="tabpanel" aria-labelledby="alumni-tab">
         <div class="accordion" id="accordionJurusan">
             @foreach (['AKL', 'MPLB', 'TKJ', 'TBSM'] as $jurusan)
                 <div class="accordion-item">
@@ -37,10 +37,7 @@
                     <div id="collapse{{ $jurusan }}" class="accordion-collapse collapse" aria-labelledby="heading{{ $jurusan }}" data-bs-parent="#accordionJurusan">
                         <div class="accordion-body">
                             <div class="mb-3 d-flex justify-content-between">
-                                <h5>Data Siswa Kelas XII - {{ $jurusan }}</h5>
-                                <a href="{{ route('tambahsiswaXII', ['kelas' => 'XII', 'jurusan' => $jurusan]) }}" class="btn btn-primary btn-sm">
-                                    + Tambah Siswa
-                                </a>
+                                <h5>Data Alumni - {{ $jurusan }}</h5>
                             </div>
                             @php
                             $pagination = $data_per_jurusan[$jurusan];
@@ -73,23 +70,14 @@
                                             <td>{{ $siswa->kelas }}</td>
                                             <td>{{ $siswa->jurusan }}</td>
                                             <td>
-                                                <a href="{{ route('editsiswaXII', $siswa->id) }}" class="btn btn-warning"><i class="fa-solid fa-pen"></i></a>
                                                 <button type="button" class="btn btn-sm btn-danger"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#confirmDeleteModal"
                                                     data-id="{{ $siswa->id }}"
                                                     data-nama="{{ $siswa->nama }}"
-                                                    data-url="{{ route('hapussiswaXII', $siswa->id) }}">
+                                                    data-url="{{ route('hapusalumni', $siswa->id) }}">
                                                     <i class="fa-solid fa-trash"></i>
                                                 </button>
-                                                <button type="button" class="btn btn-sm btn-success"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#confirmLulusModal"
-                                                data-id="{{ $siswa->id }}"
-                                                data-nama="{{ $siswa->nama }}"
-                                                data-url="{{ route('lulusSiswa', $siswa->id) }}">
-                                                Lulus
-                                            </button>
                                             </td>
                                         </tr>
                                         @empty
@@ -107,43 +95,6 @@
     </div> <!-- end tab-pane -->
 
 </div> <!-- end container -->
-<div class="modal fade" id="confirmLulusModal" tabindex="-1" aria-labelledby="confirmLulusModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="confirmLulusModalLabel">Konfirmasi</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-        </div>
-        <div class="modal-body">
-          Luluskan <strong id="namaSiswaLulus"></strong> menjadi Alumni?
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-          <form id="formLulus" method="POST" style="display:inline;">
-              @csrf
-              @method('PATCH')
-              <button type="submit" class="btn btn-success">Luluskan</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var LulusModal = document.getElementById('confirmLulusModal');
-        LulusModal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget;
-            var nama = button.getAttribute('data-nama');
-            var url = button.getAttribute('data-url');
-    
-            var namaSiswa = LulusModal.querySelector('#namaSiswaLulus');
-            var form = LulusModal.querySelector('#formLulus');
-    
-            namaSiswa.textContent = nama;
-            form.action = url;
-        });
-    });
-    </script>
 
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
     <div class="modal-dialog">

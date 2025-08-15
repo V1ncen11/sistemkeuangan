@@ -21,7 +21,7 @@
             <a class="nav-link {{ request()->is('siswa/kelas-xii') ? 'active' : '' }}" href="{{ route('siswakelasXII')}}">Kelas XII</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{ request()->is('siswa/alumni') ? 'active' : '' }}" href="#">Alumni</a>
+            <a class="nav-link {{ request()->is('siswa/alumni') ? 'active' : '' }}" href="{{ route('dataalumni')}}">Alumni</a>
         </li>
     </ul>
 
@@ -82,7 +82,14 @@
                                                     data-url="{{ route('hapussiswaXI', $siswa->id) }}">
                                                     <i class="fa-solid fa-trash"></i>
                                                 </button>
-                                                <a href="#" class="btn btn-sm btn-success">Naik Kelas</a>
+                                                <button type="button" class="btn btn-sm btn-success"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#confirmNaikKelasModal"
+                                                    data-id="{{ $siswa->id }}"
+                                                    data-nama="{{ $siswa->nama }}"
+                                                    data-url="{{ route('siswaXInaikkelas', $siswa->id) }}">
+                                                    Naik Kelas
+                                                </button>
                                             </td>
                                         </tr>
                                         @empty
@@ -100,6 +107,45 @@
     </div> <!-- end tab-pane -->
 
 </div> <!-- end container -->
+<!-- NAIK KELAS -->
+<div class="modal fade" id="confirmNaikKelasModal" tabindex="-1" aria-labelledby="confirmNaikKelasModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmNaikKelasModalLabel">Konfirmasi Naik Kelas</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+        </div>
+        <div class="modal-body">
+          Yakin mau naikkan <strong id="namaSiswaNaikKelas"></strong> ke kelas XII?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <form id="formNaikKelas" method="POST" style="display:inline;">
+              @csrf
+              @method('PATCH')
+              <button type="submit" class="btn btn-success">Naik Kelas</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var naikKelasModal = document.getElementById('confirmNaikKelasModal');
+        naikKelasModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var nama = button.getAttribute('data-nama');
+            var url = button.getAttribute('data-url');
+    
+            var namaSiswa = naikKelasModal.querySelector('#namaSiswaNaikKelas');
+            var form = naikKelasModal.querySelector('#formNaikKelas');
+    
+            namaSiswa.textContent = nama;
+            form.action = url;
+        });
+    });
+    </script>
 
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
     <div class="modal-dialog">

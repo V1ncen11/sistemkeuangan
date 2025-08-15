@@ -28,6 +28,8 @@ Route::get('/siswa/{id}/edit', [SiswaController::class, 'edit'])->name('editsisw
 Route::put('/siswa/{id}', [SiswaController::class, 'update'])->name('updatesiswa');
 //DELETE
 Route::DELETE('/hapussiswa/{id}', [SiswaController::class, 'hapus'])->name('hapussiswa');
+Route::patch('/siswa/{id}/naik-kelas-X', [SiswaController::class, 'naikkelasX'])->name('siswaXnaikkelas');
+
 
 //SISWA KELAS XI
 Route::get('/siswa/kelasXI',[SiswaController::class, 'indexXI'])->name('siswakelasXI');
@@ -37,6 +39,7 @@ Route::get('/siswaedit/{id}/kelasXI', [SiswaController::class, 'editXI'])->name(
 Route::put('/siswaupdate/{id}', [SiswaController::class, 'updateXI'])->name('updatesiswaXI');
 //DELETE
 Route::DELETE('/hapussiswaXI/{id}', [SiswaController::class, 'hapusXI'])->name('hapussiswaXI');
+Route::patch('/siswa/{id}/naik-kelas-XI', [SiswaController::class, 'naikkelasXI'])->name('siswaXInaikkelas');
 
 //SISWA KELAS XII
 Route::get('/siswa/kelasXII', [SiswaController::class, 'indexXII'])->name('siswakelasXII');
@@ -45,15 +48,32 @@ Route::post('/siswasimpan/kelasXII', [SiswaController::class, 'simpanXII'])->nam
 Route::get('/siswaedit/{id}/kelasXII', [SiswaController::class, 'editXII'])->name('editsiswaXII');
 Route::put('/siswaupdate/{id}/kelasXII', [SiswaController::class, 'updateXII'])->name('updatesiswaXII');
 Route::delete('/siswahapus/{id}/kelasXII', [SiswaController::class, 'hapusXII'])->name('hapussiswaXII');
+Route::patch('/siswa/lulus/{id}', [SiswaController::class, 'lulus'])->name('lulusSiswa');
+
+
+//Alumni
+Route::get('data_alumni', [SiswaController::class, 'indexalumn'])->name('dataalumni');
+Route::delete('/alumni/{id}', [SiswaController::class, 'hapusalumn'])->name('hapusalumni');
 
 //transaksi
 Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran');
+Route::get('/pembayaran/get-siswa/{id}', [PembayaranController::class, 'getPembayaran'])->name('getpembayaran');
+Route::get('/pembayaran/get-tagihan/{siswa_id}/{jenis_id}', [PembayaranController::class, 'getTagihan'])->name('gettagihan');
+Route::get('/pembayaran/filter', [PembayaranController::class, 'filter'])->name('pembayaran.filter');
+Route::post('/pembayaran/save', [PembayaranController::class, 'store'])->name('pembayaran.store');
+Route::get('/pembayaran/detail/{nis}', [PembayaranController::class, 'getDetailPembayaran'])->name('detailpembayaran');
+Route::get('/pembayaran/history/{nis}', [PembayaranController::class, 'getHistoryPembayaran'])->name('historypembayaran');
+
+
+
 
 //jenis pembayaran
 Route::get('/jenispembayaran', [JenisPembayaranController::class, 'index'])->name('jenispembayaran');
 Route::get('/get-jenis-pembayaran/{nis}', [JenisPembayaranController::class, 'getJenisPembayaranByNIS'])->name('get.jenis-pembayaran');
 Route::get('/jenis-pembayaran/create', [JenisPembayaranController::class, 'create'])->name('jenis-pembayaran.create');
 Route::post('/jenis-pembayaran', [JenisPembayaranController::class, 'store'])->name('jenis-pembayaran.store');
+Route::delete('/jenis-pembayaran/{id}', [JenisPembayaranController::class, 'destroy']) ->name('jenis-pembayaran.destroy');
+
 
 
 

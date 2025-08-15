@@ -2,22 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Siswa extends Model
 {
-    use HasFactory;
-
     protected $table = 'siswa';
     protected $guarded = [];
 
+
     public function pembayaran()
     {
-        return $this->hasMany(Pembayaran::class, 'siswa_id');
+        return $this->hasMany(Pembayaran::class, 'siswa_id', 'id');
     }
-    public function jenisPembayaran()
-{
-    return $this->belongsTo(JenisPembayaran::class, 'jenis_pembayaran_id');
-}
+
+    // Relasi ke jenis pembayaran berdasar kelas
+    public function jenis_pembayaran()
+    {
+        return $this->hasMany(JenisPembayaran::class, 'tingkat_kelas', 'kelas');
+    }
 }

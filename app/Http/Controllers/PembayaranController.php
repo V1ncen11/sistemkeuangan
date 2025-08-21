@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Siswa;
 use App\Models\JenisPembayaran;
+use App\Models\Pembayaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -136,5 +137,24 @@ public function getTagihan($siswaId, $jenisId)
         'message' => 'Pembayaran berhasil disimpan.'
     ]);
 }
+
+public function getHistoryPembayaran($nis)
+{
+    $riwayat = \DB::table('pembayaran')
+        ->join('jenis_pembayaran', 'pembayaran.jenis_pembayaran_id', '=', 'jenis_pembayaran.id')
+        ->join('siswa', 'pembayaran.siswa_id', '=', 'siswa.id')
+        ->select(
+            'pembayaran.tanggal',
+            'jenis_pembayaran.nama_pembayaran as jenis_pembayaran',
+            'pembayaran.jumlah',
+            'pembayaran.keterangan'
+        )
+        ->where('siswa.nis', $nis)
+        ->orderBy('pembayaran.tanggal', 'desc')
+        ->get();
+
+    return response()->json($riwayat);
+}
+
 
 }

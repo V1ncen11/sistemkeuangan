@@ -298,7 +298,7 @@ function loadRiwayat(nis) {
         tbody.innerHTML = list.map(it => `
           <tr>
             <td>${it.tanggal ?? '-'}</td>
-            <td>${it.jenis ?? '-'}</td>
+            <td>${it.jenis_pembayaran ?? '-'}</td>
             <td class="text-end">${rupiah(it.jumlah)}</td>
             <td class="text-center">${it.keterangan ?? '-'}</td>
           </tr>
@@ -308,38 +308,6 @@ function loadRiwayat(nis) {
         tbody.innerHTML = '<tr><td colspan="4" class="text-center text-danger">Gagal memuat riwayat</td></tr>';
       });
 }
-
-// handle submit form pembayaran
-document.getElementById('formBayar').addEventListener('submit', function(e) {
-    e.preventDefault(); // cegah reload
-
-    const form = this;
-    const url = form.action;
-    const formData = new FormData(form);
-
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-        },
-        body: formData
-    })
-    .then(r => r.json())
-    .then(res => {
-        if (res.success) {
-            alert(res.message);
-            bootstrap.Modal.getInstance(document.getElementById('modalBayar')).hide();
-            loadRiwayat(document.getElementById('nis').value);
-        } else {
-            alert('Gagal menyimpan pembayaran');
-        }
-    })
-    .catch(err => {
-        console.error(err);
-        alert('Terjadi kesalahan koneksi.');
-    });
-});
-
 
 // --- EVENT: pilih jenis pembayaran -> hitung tagihan ---
 document.getElementById('jenis_pembayaran').addEventListener('change', function(){
@@ -362,10 +330,11 @@ document.getElementById('jenis_pembayaran').addEventListener('change', function(
     });
 });
 
-document.getElementById('formPembayaran').addEventListener('submit', function(e) {
+document.getElementById('formBayar').addEventListener('submit', function(e) {
     e.preventDefault();
 
     const formData = new FormData(this);
+    const nis = document.getElementById('nis').value; // simpan dulu sebelum reset
 
     fetch('/pembayaran/save', {
         method: 'POST',
@@ -378,11 +347,15 @@ document.getElementById('formPembayaran').addEventListener('submit', function(e)
     .then(res => {
         if (res.success) {
             alert(res.message);
-            // reset form
+
+            // reset form setelah nis disimpan
             this.reset();
+
             // refresh riwayat otomatis
-            const nis = document.getElementById('nis').value;
-            loadRiwayatPembayaran(nis);
+            loadRiwayat(nis);
+
+            // tutup modal kalau pakai bootstrap
+            bootstrap.Modal.getInstance(document.getElementById('modalBayar')).hide();
         } else {
             alert('Gagal menyimpan pembayaran');
         }
@@ -390,28 +363,6 @@ document.getElementById('formPembayaran').addEventListener('submit', function(e)
     .catch(() => alert('Terjadi kesalahan saat menyimpan.'));
 });
 
-function loadRiwayatPembayaran(nis) {
-    const tbody = document.getElementById('detailRiwayat');
-    tbody.innerHTML = '<tr><td colspan="4" class="text-center">Memuat...</td></tr>';
-
-    fetch('/pembayaran/history/' + encodeURIComponent(nis))
-      .then(r => r.json())
-      .then(list => {
-        if (!Array.isArray(list) || !list.length) {
-          tbody.innerHTML = '<tr><td colspan="4" class="text-center">Belum ada pembayaran</td></tr>';
-          return;
-        }
-        tbody.innerHTML = list.map(it => `
-          <tr>
-            <td>${it.tanggal ?? '-'}</td>
-            <td>${it.jenis ?? '-'}</td>
-            <td class="text-end">${rupiah(it.jumlah)}</td>
-            <td class="text-center">${it.status ?? '-'}</td>
-          </tr>
-        `).join('');
-      })
-      .catch(() => tbody.innerHTML = '<tr><td colspan="4" class="text-center text-danger">Gagal memuat riwayat</td></tr>');
-}
 
 </script>
 @endsection

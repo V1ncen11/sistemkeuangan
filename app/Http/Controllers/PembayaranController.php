@@ -102,18 +102,20 @@ public function getTagihan($siswaId, $jenisId)
     ]);
 }
 
-    public function filter(Request $request)
-    {
-        $query = Siswa::query();
+public function filter(Request $request)
+{
+    $query = Siswa::query();
 
-        if ($request->kelas) {
-            $query->where('kelas', $request->kelas);
-        }
-
-        $data = $query->orderBy('nama', 'asc')->get();
-
-        return response()->json($data);
+    if ($request->kelas) {
+        $query->where('kelas', $request->kelas);
     }
+
+    // paginate (misalnya 10 per halaman)
+    $data = $query->orderBy('nama', 'asc')->paginate(10);
+
+    return response()->json($data);
+}
+
 
     public function store(Request $request)
 {

@@ -68,6 +68,8 @@
         @endforeach
       </tbody>
     </table>
+    <div id="pagination" class="mt-2"></div>
+
   </div>
 </div>
 
@@ -173,7 +175,7 @@
           </div>
 
           <div class="d-flex gap-2 mt-3">
-            <button type="submit" class="btn btn-success flex-fill">
+            <button type="submit" class="btn btn-success flex-fill" id="btnSubmit">
               <i class="bi bi-save me-2"></i>Simpan Pembayaran
             </button>
             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
@@ -182,6 +184,19 @@
       </div>
     </div>
   </div>
+</div>
+<div class="toast-container position-fixed top-0 end-0 p-3" style="margin-top: 70px;">
+
+
+  <div id="liveToast" class="toast align-items-center text-bg-success border-0" role="alert">
+    <div class="d-flex">
+      <div class="toast-body" id="toastMessage">
+        Success message here
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>
 </div>
 @endsection
 
@@ -194,23 +209,75 @@ function rupiah(n) {
   return 'Rp ' + num.toLocaleString('id-ID');
 }
 
-// --- filter kelas (client-side berdasar atribut data-kelas di <tr>) ---
-    document.getElementById('filter_kelas').addEventListener('change', function(){
-  const val = this.value;
-  document.querySelectorAll('#tbody_siswa tr').forEach(tr => {
+function showToast(message, type = 'success') {
+  const toastEl = document.getElementById('liveToast');
+  const toastBody = document.getElementById('toastMessage');
+  toastBody.textContent = message;
+
+  toastEl.classList.remove('text-bg-success', 'text-bg-danger');
+  toastEl.classList.add(type === 'success' ? 'text-bg-success' : 'text-bg-danger');
+
+  new bootstrap.Toast(toastEl).show();
+}
+
+
+// filter kelas client-side berdasar atribut data-kelas
+  const filter = document.getElementById('filter_kelas');
+let currentPage = 1;
+const rowsPerPage = 10;
+
+function getFilteredRows(val) {
+  return [...document.querySelectorAll('#tbody_siswa tr')].filter(tr => {
     let kelas = tr.getAttribute('data-kelas') || '';
-    if (!val) {
-      tr.style.display = '';
-    } else if (val === 'alumni') {
-      tr.style.display = (!kelas || kelas.toLowerCase() === 'alumni') ? '' : 'none';
-    } else {
-      tr.style.display = (kelas === val) ? '' : 'none';
+    if (!val) return true;
+    if (val.toLowerCase() === 'alumni') {
+      return (!kelas || kelas.toLowerCase() === 'alumni');
     }
+    return kelas === val;
   });
+}
+
+function renderTable(page = 1) {
+  const val = filter.value;
+  const rows = getFilteredRows(val);
+
+  const totalPages = Math.ceil(rows.length / rowsPerPage);
+  if (page > totalPages) page = totalPages || 1;
+  currentPage = page;
+  document.querySelectorAll('#tbody_siswa tr').forEach(tr => tr.style.display = 'none');
+  const start = (page - 1) * rowsPerPage;
+  const end = start + rowsPerPage;
+  rows.slice(start, end).forEach(tr => tr.style.display = '');
+
+  // render pagination
+  const pag = document.getElementById('pagination');
+  pag.innerHTML = '';
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement('button');
+    btn.textContent = i;
+    btn.className = 'btn btn-sm ' + (i === currentPage ? 'btn-primary' : 'btn-light');
+    btn.addEventListener('click', () => renderTable(i));
+    pag.appendChild(btn);
+  }
+}
+
+
+filter.addEventListener('change', function(){
+  const val = this.value;
+  localStorage.setItem('kelasFilter', val);
+  renderTable(1);
+});
+
+// saat pertama kali load
+window.addEventListener('DOMContentLoaded', () => {
+  const last = localStorage.getItem('kelasFilter');
+  if (last) filter.value = last;
+  renderTable(1);
 });
 
 
-// --- EVENT: tombol Detail & Bayar (delegation) ---
+
+//tombol Detail & Bayar (delegation)
 document.addEventListener('click', function(e){
   const btn = e.target.closest('.btn-detail, .btn-bayar');
   if (!btn) return;
@@ -295,14 +362,14 @@ function loadRiwayat(nis) {
           tbody.innerHTML = '<tr><td colspan="4" class="text-center">Belum ada pembayaran</td></tr>';
           return;
         }
-        tbody.innerHTML = list.map(it => `
-          <tr>
-            <td>${it.tanggal ?? '-'}</td>
-            <td>${it.jenis_pembayaran ?? '-'}</td>
-            <td class="text-end">${rupiah(it.jumlah)}</td>
-            <td class="text-center">${it.keterangan ?? '-'}</td>
-          </tr>
-        `).join('');
+        tbody.innerHTML = list.map((it, i) => `
+        <tr class="${i === 0 ? 'table-success' : ''}">
+          <td>${it.tanggal ?? '-'}</td>
+          <td>${it.jenis_pembayaran ?? '-'}</td>
+          <td class="text-end">${rupiah(it.jumlah)}</td>
+          <td class="text-center">${it.keterangan ?? '-'}</td>
+        </tr>
+      `).join('');
       })
       .catch(() => {
         tbody.innerHTML = '<tr><td colspan="4" class="text-center text-danger">Gagal memuat riwayat</td></tr>';
@@ -335,6 +402,11 @@ document.getElementById('formBayar').addEventListener('submit', function(e) {
 
     const formData = new FormData(this);
     const nis = document.getElementById('nis').value; // simpan dulu sebelum reset
+    const btn = document.getElementById('btnSubmit'); // ambil tombol submit
+
+    // 🔹 Disable button + ubah teks
+    btn.disabled = true;
+    btn.innerHTML = 'Menyimpan...';
 
     fetch('/pembayaran/save', {
         method: 'POST',
@@ -346,21 +418,32 @@ document.getElementById('formBayar').addEventListener('submit', function(e) {
     .then(r => r.json())
     .then(res => {
         if (res.success) {
-            alert(res.message);
-
-            // reset form setelah nis disimpan
+            showToast(res.message, 'success');
             this.reset();
-
-            // refresh riwayat otomatis
             loadRiwayat(nis);
-
-            // tutup modal kalau pakai bootstrap
             bootstrap.Modal.getInstance(document.getElementById('modalBayar')).hide();
         } else {
-            alert('Gagal menyimpan pembayaran');
+            showToast('Gagal menyimpan pembayaran', 'danger');
         }
     })
-    .catch(() => alert('Terjadi kesalahan saat menyimpan.'));
+    .catch(() => showToast('Terjadi kesalahan saat menyimpan.', 'danger'))
+    .finally(() => {
+        // 🔹 Aktifkan lagi button + reset teks
+        btn.disabled = false;
+        btn.innerHTML = 'Simpan';
+    });
+});
+
+
+//agar jumlah bayar tidak lebih besar dari sisa tagihan
+document.getElementById('jumlah_bayar').addEventListener('input', function(){
+  let bayar = Number(this.value.replace(/\D/g, '')) || 0; 
+  let sisa  = Number(document.getElementById('sisa_tagihan').value.replace(/\D/g, '')) || 0;
+
+  if (bayar > sisa) {
+    alert('Jumlah bayar tidak boleh lebih besar dari sisa tagihan!');
+    this.value = sisa; 
+  }
 });
 
 

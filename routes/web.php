@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\JenisPembayaranController;
+use App\Http\Controllers\JenisPengeluaranController;
+use App\Http\Controllers\PengeluaranController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HalutamaController;
 /*
 |--------------------------------------------------------------------------
@@ -64,9 +67,6 @@ Route::post('/pembayaran/save', [PembayaranController::class, 'store'])->name('p
 Route::get('/pembayaran/detail/{nis}', [PembayaranController::class, 'getDetailPembayaran'])->name('detailpembayaran');
 Route::get('/pembayaran/history/{nis}', [PembayaranController::class, 'getHistoryPembayaran'])->name('historypembayaran');
 
-
-
-
 //jenis pembayaran
 Route::get('/jenispembayaran', [JenisPembayaranController::class, 'index'])->name('jenispembayaran');
 Route::get('/get-jenis-pembayaran/{nis}', [JenisPembayaranController::class, 'getJenisPembayaranByNIS'])->name('get.jenis-pembayaran');
@@ -74,6 +74,19 @@ Route::get('/jenis-pembayaran/create', [JenisPembayaranController::class, 'creat
 Route::post('/jenis-pembayaran', [JenisPembayaranController::class, 'store'])->name('jenis-pembayaran.store');
 Route::delete('/jenis-pembayaran/{id}', [JenisPembayaranController::class, 'destroy']) ->name('jenis-pembayaran.destroy');
 
+//jenis pengeluaran
+Route::get('/jenis-pengeluaran',[JenisPengeluaranController::class, 'index'])->name('jenis_pengeluaran');
+Route::get('/jenis-pengeluaran/create',[JenisPengeluaranController::class, 'create'])->name('jenis_pengeluaran.create');
+Route::post('/jenis-pengeluaran/save',[JenisPengeluaranController::class, 'store'])->name('jenis_pengeluaran.store');
+
+//pengeluaran
+Route::get('/pengeluaran', [PengeluaranController::class, 'index'])->name('pengeluaran');
+Route::post('/pengeluaran/store', [PengeluaranController::class, 'store'])->name('pengeluaran.store');
+//Login
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+});
 
 
 

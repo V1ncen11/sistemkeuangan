@@ -9,7 +9,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
 
   <!-- Memuat CSS tambahan khusus (lokal) -->
-  <link rel="stylesheet" href="../Sistem_Keuangan/css/style.css" />
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
@@ -42,7 +42,7 @@
         <!-- Tombol login -->
         <div class="d-grid">
           <!-- Perlu diperhatikan: menggunakan <a> untuk tombol login tidak ideal -->
-          <a href="Hal_Utama.php" type="submit" class="btn btn-primary">Login</a>
+          <a href="{{ route('halutama')}}" type="submit" class="btn btn-primary">Login</a>
         </div>
       </form>
     </div>

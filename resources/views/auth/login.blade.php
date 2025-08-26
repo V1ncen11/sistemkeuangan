@@ -26,23 +26,29 @@
       <h2 class="login-title">Login</h2>
 
       <!-- Form login -->
-      <form>
+      <form action="{{ route('login.post')}}" method="POST">
+        @csrf
         <!-- Input Email -->
         <div class="mb-3">
           <label for="email" class="form-label">Email</label>
-          <input type="email" class="form-control" id="email" placeholder="Masukkan email" required />
+          <input type="email" class="form-control" name="email" id="email" placeholder="Masukkan email" required />
+          @error('email')
+          <span style="color:red">{{ $message }}</span>
+      @enderror
         </div>
 
         <!-- Input Password -->
         <div class="mb-3">
           <label for="password" class="form-label">Kata Sandi</label>
-          <input type="password" class="form-control" id="password" placeholder="Masukkan password" required />
+          <input type="password" name="password" class="form-control" id="password" placeholder="Masukkan password" required />
         </div>
 
         <!-- Tombol login -->
         <div class="d-grid">
           <!-- Perlu diperhatikan: menggunakan <a> untuk tombol login tidak ideal -->
-          <a href="{{ route('halutama')}}" type="submit" class="btn btn-primary">Login</a>
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary">Login</button>
+          </div>
         </div>
       </form>
     </div>

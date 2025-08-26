@@ -73,15 +73,16 @@
                     <td>Rp. {{ number_format($p->jumlah,0,',','.') }}</td>
                     <td>{{ $p->deskripsi}}</td>
                     <td>
-                      <a href="#" class="btn btn-warning"><i class="fa-solid fa-pen"></i></a>
-                      <button type="button" class="btn btn-sm btn-danger"
-                          data-bs-toggle="modal"
-                          data-bs-target="#confirmDeleteModal"
-                          data-id="{{ $p->id }}"
-                          data-nama="{{ $p->nama }}"
-                          data-url="#">
-                          <i class="fa-solid fa-trash"></i>
-                      </button>
+                      <button type="button" 
+                      class="btn btn-sm btn-danger"
+                      data-bs-toggle="modal"
+                      data-bs-target="#confirmDeleteModal"
+                      data-id="{{ $p->id }}"
+                      data-nama="{{ $p->jenisPengeluaran->nama }}"
+                      data-url="{{ route('pengeluaran.destroy', $p->id) }}">
+                  <i class="fa-solid fa-trash"></i>
+              </button>
+                  
                   </td>
                   </tr>
                 @empty
@@ -95,42 +96,48 @@
       </div>
       </div>
     </div>
-    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <form method="POST" id="deleteForm">
-          @csrf
-          @method('DELETE')
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="confirmDeleteLabel">Konfirmasi Hapus</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-              <p>Yakin mau hapus data <strong id="namaSiswa"></strong>?</p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-              <button type="submit" class="btn btn-danger">Hapus</button>
-            </div>
-          </div>
-        </form>
+  <!-- Modal Konfirmasi Hapus -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="POST" id="deleteForm">
+      @csrf
+      @method('DELETE')
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmDeleteLabel">Konfirmasi Hapus</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p>Yakin mau hapus riwayat data pengeluaran <strong id="nama"></strong>?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-danger">Hapus</button>
+        </div>
       </div>
-    </div>
-    @endsection
-    <script>
-      const confirmDeleteModal = document.getElementById('confirmDeleteModal');
-     confirmDeleteModal.addEventListener('show.bs.modal', function (event) {
-       const button = event.relatedTarget;
-       const nama = button.getAttribute('data-nama');
-       const url = button.getAttribute('data-url'); // Ambil URL dari data-url
-     
-       const form = document.getElementById('deleteForm');
-       form.action = url; // Set URL ke form
-     
-       document.getElementById('namaSiswa').textContent = nama;
-     });
-     
-     </script>
+    </form>
+  </div>
+</div>
+
+<!-- Script Modal -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+  confirmDeleteModal.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+    const nama = button.getAttribute('data-nama');
+    const url = button.getAttribute('data-url');
+
+    // Set form action ke url route destroy
+    const form = document.getElementById('deleteForm');
+    form.action = url;
+
+    // Set nama di modal
+    document.getElementById('nama').textContent = nama;
+  });
+});
+</script>
     
+    @endsection
       
     

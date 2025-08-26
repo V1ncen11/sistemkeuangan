@@ -10,7 +10,7 @@
     @endif
 
     <div class="mb-3">
-        <a href="{{ route('jenis_pengeluaran.create')}}" class="btn btn-primary">Kelola Jenis Pengeluaran</a>
+        <a href="{{ route('jenis_pengeluaran.create')}}" class="btn btn-primary">Tambah Jenis Pengeluaran</a>
     </div>
 
     <div class="table-responsive">
@@ -34,7 +34,7 @@
                           data-bs-target="#confirmDeleteModal"
                           data-id="{{ $j->id }}"
                           data-nama="{{ $j->nama }}"
-                          data-url="#">
+                          data-url="{{ route('jenis_pengeluaran.destroy', $j->id)}}">
                           <i class="fa-solid fa-trash"></i>
                       </button>
                     </td>

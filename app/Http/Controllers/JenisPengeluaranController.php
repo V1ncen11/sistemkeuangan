@@ -27,4 +27,12 @@ class JenisPengeluaranController extends Controller
             ->route('jenis_pengeluaran')
             ->with('success', 'Jenis pengeluaran berhasil ditambahkan.');
     }
+
+    public function destroy($id)
+{
+    $jenisPengeluaran = JenisPengeluaran::findOrFail($id);
+    $jenisPengeluaran->delete();
+
+    return redirect()->route('jenis_pengeluaran')->with('success', 'Data berhasil dihapus!');
+}
 }

@@ -32,7 +32,7 @@
             </a>
             <div class="collapse ms-3" id="submenuTransaksi">
                 <a href="{{ route('pembayaran')}}" class="list-group-item list-group-item-action bg-dark text-white border-0">Pembayaran</a>
-                <a href="{{ route('pengeluaran')}}" class="list-group-item list-group-item-action bg-dark text-white border-0">Pengeluaran</a>
+                <a href="{{ route('pengeluaran.index')}}" class="list-group-item list-group-item-action bg-dark text-white border-0">Pengeluaran</a>
                 <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0">KAS</a>
                 <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0">Tabungan Siswa</a>
             </div>
@@ -47,9 +47,13 @@
                 <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0">Rekap Tabungan</a>
             </div>
 
-            <a href="{{ url('/') }}" class="list-group-item list-group-item-action bg-dark text-white mt-4">
-                <i class="bi bi-box-arrow-right me-2"></i> Logout
-            </a>
+            <form action="{{ route('logout') }}" method="POST" class="mt-4">
+                @csrf
+                <button type="submit" class="list-group-item list-group-item-action bg-dark text-white border-0">
+                    <i class="bi bi-box-arrow-right me-2"></i> Logout
+                </button>
+            </form>
+            
         </div>
     </div>
 

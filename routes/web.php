@@ -21,9 +21,25 @@ use App\Http\Controllers\HalutamaController;
 
 
 
-Route::get('/', [HalutamaController::class, 'index'])->name('halutama');
+Route::get('/', [HalutamaController::class, 'index'])->name('login');
 
-//SISWA KELAS X
+
+
+//Login
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+});
+
+// Routes untuk user yang sudah login
+Route::middleware('auth')->group(function () {
+    Route::get('/halutama', function () {
+        return view('hal_utama');
+    })->name('halutama');
+
+
+    Route::get('/dashboard', [HalutamaController::class, 'dashboard'])->name('halutama');
+    //SISWA KELAS X
 Route::get('/siswakelasX',[SiswaController::class, 'index'])->name('siswa');
 Route::get('/tambahsiswa/{kelas}/{jurusan}', [SiswaController::class, 'tambah'])->name('tambahsiswa');
 Route::post('/siswasimpan', [SiswaController::class, 'simpan'])->name('siswasimpan');
@@ -78,15 +94,20 @@ Route::delete('/jenis-pembayaran/{id}', [JenisPembayaranController::class, 'dest
 Route::get('/jenis-pengeluaran',[JenisPengeluaranController::class, 'index'])->name('jenis_pengeluaran');
 Route::get('/jenis-pengeluaran/create',[JenisPengeluaranController::class, 'create'])->name('jenis_pengeluaran.create');
 Route::post('/jenis-pengeluaran/save',[JenisPengeluaranController::class, 'store'])->name('jenis_pengeluaran.store');
+Route::delete('/jenis-pengeluaran/{id}',[JenisPengeluaranController::class, 'destroy'])->name('jenis_pengeluaran.destroy');
 
 //pengeluaran
-Route::get('/pengeluaran', [PengeluaranController::class, 'index'])->name('pengeluaran');
+Route::get('/pengeluaran', [PengeluaranController::class, 'index'])->name('pengeluaran.index');
 Route::post('/pengeluaran/store', [PengeluaranController::class, 'store'])->name('pengeluaran.store');
-//Login
-Route::middleware('guest')->group(function () {
-    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
+Route::delete('/pengeluaran/destroy/{id}', [PengeluaranController::class, 'destroy'])->name('pengeluaran.destroy');
+
+
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
+
+
+//logout
+
 
 
 

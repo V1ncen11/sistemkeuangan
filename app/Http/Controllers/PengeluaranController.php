@@ -34,7 +34,15 @@ public function store(Request $request)
     ]);
     
     return redirect()
-        ->route('pengeluaran')
+        ->route('pengeluaran.index')
         ->with('success', 'Pengeluaran berhasil ditambahkan.');
+}
+
+public function destroy($id)
+{
+    $pengeluaran = Pengeluaran::findOrFail($id);
+    $pengeluaran->delete();
+
+    return redirect()->route('pengeluaran.index')->with('success', 'Data berhasil dihapus!');
 }
 }

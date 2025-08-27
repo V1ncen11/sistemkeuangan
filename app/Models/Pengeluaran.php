@@ -15,4 +15,10 @@ class Pengeluaran extends Model
     {
         return $this->belongsTo(JenisPengeluaran::class, 'jenis_pengeluaran_id');
     }
-}
+
+    public function kas() {
+            return $this->belongsTo(Kas::class);
+        }
+    }
+    
+

@@ -26,4 +26,9 @@ class Pembayaran extends Model
     {
         return $this->belongsTo(Siswa::class, 'siswa_id', 'id');
     }
+    // public function kas()
+    // {
+    //     return $this->hasOne(Kas::class, 'pembayaran_id');
+    // }
+    
 }

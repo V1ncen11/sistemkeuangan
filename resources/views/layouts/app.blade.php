@@ -33,7 +33,7 @@
             <div class="collapse ms-3" id="submenuTransaksi">
                 <a href="{{ route('pembayaran')}}" class="list-group-item list-group-item-action bg-dark text-white border-0">Pembayaran</a>
                 <a href="{{ route('pengeluaran.index')}}" class="list-group-item list-group-item-action bg-dark text-white border-0">Pengeluaran</a>
-                <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0">KAS</a>
+                <a href="{{ route('transaksi.kas')}}" class="list-group-item list-group-item-action bg-dark text-white border-0">KAS</a>
                 <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0">Tabungan Siswa</a>
             </div>
 

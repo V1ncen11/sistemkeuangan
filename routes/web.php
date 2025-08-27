@@ -7,6 +7,7 @@ use App\Http\Controllers\JenisPembayaranController;
 use App\Http\Controllers\JenisPengeluaranController;
 use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\KasController;
 use App\Http\Controllers\HalutamaController;
 /*
 |--------------------------------------------------------------------------
@@ -38,7 +39,7 @@ Route::middleware('auth')->group(function () {
     })->name('halutama');
 
 
-    Route::get('/dashboard', [HalutamaController::class, 'dashboard'])->name('halutama');
+Route::get('/dashboard', [HalutamaController::class, 'dashboard'])->name('halutama');
     //SISWA KELAS X
 Route::get('/siswakelasX',[SiswaController::class, 'index'])->name('siswa');
 Route::get('/tambahsiswa/{kelas}/{jurusan}', [SiswaController::class, 'tambah'])->name('tambahsiswa');
@@ -101,12 +102,16 @@ Route::get('/pengeluaran', [PengeluaranController::class, 'index'])->name('penge
 Route::post('/pengeluaran/store', [PengeluaranController::class, 'store'])->name('pengeluaran.store');
 Route::delete('/pengeluaran/destroy/{id}', [PengeluaranController::class, 'destroy'])->name('pengeluaran.destroy');
 
+//kas
+Route::get('/transaksi-kas',[KasController::class, 'index'])->name('transaksi.kas');
+Route::get('/transaksi-fromkas',[KasController::class, 'FromPembayaran'])->name('kas.fromkas');
+Route::get('/transaksi-fromkas',[KasController::class, 'FromPengeluaran'])->name('kas.fromkas');
 
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
 
-//logout
+
 
 
 

@@ -350,6 +350,7 @@ document.addEventListener('click', function(e){
   }
 });
 
+
 // fungsi untuk refresh riwayat setelah simpan
 function loadRiwayat(nis) {
     const tbody = document.getElementById('detailRiwayat');

@@ -26,12 +26,13 @@ public function store(Request $request)
         'deskripsi' => 'nullable|string|max:255',
     ]);
 
-    Pengeluaran::create([
+$pengeluaran = Pengeluaran::create([
         'tanggal' => $request->tanggal,
         'jenis_pengeluaran_id' => $request->jenis_pengeluaran_id,
         'jumlah' => $request->jumlah,
         'deskripsi' => $request->deskripsi,
     ]);
+    KasController::fromPengeluaran($pengeluaran);
     
     return redirect()
         ->route('pengeluaran.index')

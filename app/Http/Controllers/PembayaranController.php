@@ -109,8 +109,6 @@ public function filter(Request $request)
     if ($request->kelas) {
         $query->where('kelas', $request->kelas);
     }
-
-    // paginate (misalnya 10 per halaman)
     $data = $query->orderBy('nama', 'asc')->paginate(10);
 
     return response()->json($data);
@@ -126,13 +124,15 @@ public function filter(Request $request)
         'keterangan' => 'nullable|string|max:255', // status diinput manual
     ]);
 
-    Pembayaran::create([
+    $pembayaran = Pembayaran::create([
         'siswa_id' => $request->siswa_id,
         'jenis_pembayaran_id' => $request->jenis_pembayaran_id,
         'jumlah' => $request->jumlah,
         'tanggal' => now(),
         'keterangan' => $request->keterangan // langsung simpan dari admin
     ]);
+    KasController::fromPembayaran($pembayaran);
+
 
     return response()->json([
         'success' => true,

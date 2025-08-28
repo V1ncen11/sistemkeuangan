@@ -106,6 +106,9 @@ Route::delete('/pengeluaran/destroy/{id}', [PengeluaranController::class, 'destr
 Route::get('/transaksi-kas',[KasController::class, 'index'])->name('transaksi.kas');
 Route::get('/transaksi-fromkas',[KasController::class, 'FromPembayaran'])->name('kas.fromkas');
 Route::get('/transaksi-fromkas',[KasController::class, 'FromPengeluaran'])->name('kas.fromkas');
+Route::get('/transaksi-kas-create',[KasController::class, 'create'])->name('kas.create');
+Route::post('/transaksi-kas-store',[KasController::class, 'store'])->name('kas.store');
+Route::delete('/transaksi-kas-destroy/{id}',[KasController::class, 'destroy'])->name('kas.destroy');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });

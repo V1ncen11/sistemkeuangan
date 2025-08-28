@@ -11,9 +11,15 @@ use App\Models\Pembayaran;
 class KasController extends Controller
 {
     public function index()
-{
-    $kas = Kas::latest()->get();
-    return view('pages.transaksi.kas', compact('kas'));
+{   
+    $kas = Kas::orderBy('tanggal', 'asc')->orderBy('id', 'asc')->paginate(10);
+
+
+    $totalMasuk = Kas::where('tipe', 'masuk')->sum('jumlah');
+    $totalKeluar = Kas::where('tipe', 'keluar')->sum('jumlah');
+    $saldoAkhir = $totalMasuk - $totalKeluar;
+
+    return view('pages.transaksi.kas', compact('kas', 'totalMasuk', 'totalKeluar', 'saldoAkhir'));
     
 }
 public static function fromPembayaran(Pembayaran $pembayaran)
@@ -25,6 +31,7 @@ public static function fromPembayaran(Pembayaran $pembayaran)
         'pembayaran_id' => $pembayaran->id,
         'jumlah' => $pembayaran->jumlah,
         'deskripsi' => $pembayaran->keterangan,
+        'sumber' => $pembayaran->siswa->nama ?? 'Pembayaran Siswa', // <-- otomatis isi nama siswa
     ]);
 }
 
@@ -39,4 +46,39 @@ public static function fromPengeluaran(Pengeluaran $pengeluaran)
         'deskripsi' => $pengeluaran->deskripsi,
     ]);
 }
+
+public function create(){
+    return view('pages.transaksi.tambahkas');
+}
+public function store(Request $request)
+{
+    $request->validate([
+        'tanggal' => 'required|date',
+        'deskripsi' => 'required|string|max:255',
+        'sumber' => 'required|string|max:255',
+        'tipe' => 'required|in:masuk,keluar',
+        'jumlah' => 'required|numeric|min:1',
+    ]);
+
+    Kas::create([
+        'tanggal' => $request->tanggal,
+        'deskripsi' => $request->deskripsi,
+        'sumber' => $request->sumber,
+        'tipe' => $request->tipe,
+        'jumlah' => $request->jumlah,
+    ]);
+
+    return redirect()->route('transaksi.kas')
+                     ->with('success', 'Transaksi kas berhasil ditambahkan!');
+}
+
+public function destroy($id)
+{
+    $kas = Kas::findOrFail($id);
+    $kas->delete();
+
+    return redirect()->back()->with('success', 'Data kas berhasil dihapus!');
+}
+
+
 }

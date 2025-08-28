@@ -10,8 +10,9 @@ class PengeluaranController extends Controller
     public function index()
     {
            $pengeluaran = Pengeluaran::with('jenisPengeluaran')
-        ->orderBy('tanggal', 'desc') // urutkan berdasarkan tanggal terbaru
+        ->orderBy('tanggal', 'desc')->orderBy('id', 'asc') // urutkan berdasarkan tanggal terbaru
         ->paginate(5);
+
 
     $jenisPengeluaran = JenisPengeluaran::all();
 

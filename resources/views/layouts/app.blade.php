@@ -34,7 +34,7 @@
                 <a href="{{ route('pembayaran')}}" class="list-group-item list-group-item-action bg-dark text-white border-0">Pembayaran</a>
                 <a href="{{ route('pengeluaran.index')}}" class="list-group-item list-group-item-action bg-dark text-white border-0">Pengeluaran</a>
                 <a href="{{ route('transaksi.kas')}}" class="list-group-item list-group-item-action bg-dark text-white border-0">KAS</a>
-                <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0">Tabungan Siswa</a>
+                <a href="{{ route('tabungan')}}" class="list-group-item list-group-item-action bg-dark text-white border-0">Tabungan Siswa</a>
             </div>
 
             <!-- Laporan -->

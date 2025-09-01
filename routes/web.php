@@ -8,6 +8,7 @@ use App\Http\Controllers\JenisPengeluaranController;
 use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\KasController;
+use App\Http\Controllers\TabunganController;
 use App\Http\Controllers\HalutamaController;
 /*
 |--------------------------------------------------------------------------
@@ -37,7 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/halutama', function () {
         return view('hal_utama');
     })->name('halutama');
-
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/dashboard', [HalutamaController::class, 'dashboard'])->name('halutama');
     //SISWA KELAS X
@@ -110,11 +111,17 @@ Route::get('/transaksi-kas-create',[KasController::class, 'create'])->name('kas.
 Route::post('/transaksi-kas-store',[KasController::class, 'store'])->name('kas.store');
 Route::delete('/transaksi-kas-destroy/{id}',[KasController::class, 'destroy'])->name('kas.destroy');
 
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+//tabungan
+Route::get('/tabungan',[TabunganController::class, 'index'])->name('tabungan');
+Route::post('/tabungan/store', [TabunganController::class, 'store'])->name('tabungan.store');
+
+
+
+
 });
 
 
-
+Route::get('/tabungan/riwayat/{id}', [TabunganController::class, 'riwayat'])->name('tabungan.riwayat');
 
 
 

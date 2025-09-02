@@ -1,8 +1,22 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mt-4">
-  <h3 class="mb-4">Tabungan Siswa</h3>
+{{-- Pesan sukses --}}
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
+{{-- Pesan error --}}
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
 
   <!-- Pilih Kelas -->
   <div class="mb-3 row">
@@ -120,11 +134,11 @@
                       </div>
                       <div class="mb-3">
                         <label class="form-label">Jumlah Tarik</label>
-                        <input type="number" class="form-control" name="jumlah" required>
+                        <input type="number" class="form-control" name="jumlah" required placeholder="Masukan jumlah penarikan...">
                       </div>
                     </div>
                     <div class="modal-footer">
-                      <button type="submit" class="btn btn-danger">Simpan</button>
+                      <button type="submit" id="btnTarik" class="btn btn-danger">Simpan</button>
                     </div>
                   </form>
                 </div>
@@ -133,75 +147,115 @@
             @endforeach
           </tbody>
         </table>
-      </div>
+          {{ $data->links() }}  
     </div>
   </div>
 </div>
 
 <!-- Modal Riwayat -->
+<!-- Modal Riwayat -->
 <div class="modal fade" id="modalRiwayat" tabindex="-1">
   <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
+    <div class="modal-content rounded-3 shadow-lg border-0">
+      <div class="modal-header bg-info text-white">
         <h5 class="modal-title">Riwayat Tabungan</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
+
+        <!-- Info Siswa -->
         <div id="infoSiswa" class="mb-3">
-          <p><strong>NIS:</strong> <span id="nis"></span></p>
-          <p><strong>Nama:</strong> <span id="nama"></span></p>
-          <p><strong>Jurusan:</strong> <span id="jurusan"></span></p>
-          <p><strong>Total Saldo:</strong> Rp <span id="saldo"></span></p>
+          <p><strong>NIS:</strong> <span id="nis" class="text-dark"></span></p>
+          <p><strong>Nama:</strong> <span id="nama" class="fw-bold text-primary"></span></p>
+          <p><strong>Jurusan:</strong> <span id="jurusan" class="text-secondary"></span></p>
+          <p class="fw-bold">Total Saldo: <span class="text-success">Rp <span id="saldo"></span></span></p>
         </div>
 
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>Tanggal</th>
-              <th>Tipe</th>
-              <th>Jumlah</th>
-            </tr>
-          </thead>
-          <tbody id="tabelRiwayat"></tbody>
-        </table>
+        <!-- Tabel Riwayat -->
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-dark text-center">
+              <tr>
+                <th>Tanggal</th>
+                <th>Tipe</th>
+                <th>Jumlah</th>
+              </tr>
+            </thead>
+            <tbody id="tabelRiwayat" class="text-center"></tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
 @endsection
 
-@push('scripts')
+@section('scripts')
 <script>
-  document.addEventListener('click', function(e) {
-  let btn = e.target.closest('.btn-riwayat');
-  if (btn) {
-    let id = btn.dataset.id;
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.btn-riwayat').forEach(btn => {
+      btn.addEventListener('click', function () {
+        let id = this.dataset.id;
+  
+        fetch(`/tabungan/riwayat/${id}`)
+          .then(res => res.json())
+          .then(data => {
+            console.log(data); // cek isi data JSON
+  
+            document.getElementById('nis').innerText     = data.nis;
+            document.getElementById('nama').innerText    = data.nama;
+            document.getElementById('jurusan').innerText = data.jurusan;
+            document.getElementById('saldo').innerText   = data.saldo;
+  
+            let tbody = document.getElementById('tabelRiwayat');
+            tbody.innerHTML = '';
+            data.riwayat.forEach(r => {
+              tbody.innerHTML += `
+                <tr>
+                  <td>${r.tanggal}</td>
+                  <td>${r.tipe}</td>
+                  <td>${r.jumlah}</td>
+                </tr>
+              `;
+            });
+          })
+          .catch(err => console.error(err));
+      });
+    });
+  });
 
-    fetch(`/tabungan/riwayat/${id}`)
-      .then(res => res.json())
-      .then(data => {
-        console.log(data); // <-- cek dulu hasil JSON nya disini
+  document.getElementById('btnTarik').addEventListener('click', function() {
+  let saldo  = parseInt(document.getElementById('saldo').innerText); 
+  let jumlah = parseInt(document.getElementById('jumlah').value);
 
-        document.getElementById('nis').innerText       = data.nis;
-        document.getElementById('nama').innerText      = data.nama;
-        document.getElementById('jurusan').innerText   = data.jurusan;
-        document.getElementById('saldo').innerText     = data.saldo;
-
-        let tbody = document.getElementById('tabelRiwayat');
-        tbody.innerHTML = '';
-        data.riwayat.forEach(r => {
-          tbody.innerHTML += `
-            <tr>
-              <td>${r.tanggal}</td>
-              <td>${r.tipe}</td>
-              <td>${r.jumlah}</td>
-            </tr>
-          `;
-        });
-      })
-      .catch(err => console.error(err));
+  if (jumlah > saldo) {
+    alert("⚠️ Jumlah penarikan tidak boleh lebih dari saldo!");
+    return; // stop proses
   }
+
+  // kalau aman, lanjut fetch/submit ke server
+  fetch('/tabungan/store', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    },
+    body: JSON.stringify({ jumlah })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert("✅ Penarikan berhasil!");
+      location.reload();
+    } else {
+      alert("❌ Gagal tarik tabungan!");
+    }
+  });
 });
+
   </script>
   
-@endpush
+
+  
+@endsection

@@ -9,6 +9,7 @@ use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\KasController;
 use App\Http\Controllers\TabunganController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\HalutamaController;
 /*
 |--------------------------------------------------------------------------
@@ -114,14 +115,15 @@ Route::delete('/transaksi-kas-destroy/{id}',[KasController::class, 'destroy'])->
 //tabungan
 Route::get('/tabungan',[TabunganController::class, 'index'])->name('tabungan');
 Route::post('/tabungan/store', [TabunganController::class, 'store'])->name('tabungan.store');
+Route::get('/tabungan/riwayat/{id}', [TabunganController::class, 'riwayat'])->name('tabungan.riwayat');
 
-
-
+//laporan harian
+Route::get('/laporan-harian',[LaporanController::class, 'harian'])->name('laporan.harian');
 
 });
 
 
-Route::get('/tabungan/riwayat/{id}', [TabunganController::class, 'riwayat'])->name('tabungan.riwayat');
+
 
 
 

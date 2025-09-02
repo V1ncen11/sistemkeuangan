@@ -22,7 +22,7 @@ class Siswa extends Model
     }
     public function tabungan()
 {
-    return $this->hasMany(Tabungan::class);
+    return $this->hasMany(Tabungan::class, 'siswa_id');
 }
 
 }

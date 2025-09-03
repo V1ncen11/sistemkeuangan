@@ -43,7 +43,7 @@
             </a>
             <div class="collapse ms-3" id="submenuLaporan">
                 <a href="{{ route('laporan.harian') }}" class="list-group-item list-group-item-action bg-dark text-white border-0">Laporan Harian</a>
-                <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0">Laporan Bulanan</a>
+                <a href="{{ route('laporan.bulanan') }}" class="list-group-item list-group-item-action bg-dark text-white border-0">Laporan Bulanan</a>
                 <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0">Rekap Tabungan</a>
             </div>
 

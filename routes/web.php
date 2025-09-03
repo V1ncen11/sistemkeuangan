@@ -119,6 +119,11 @@ Route::get('/tabungan/riwayat/{id}', [TabunganController::class, 'riwayat'])->na
 
 //laporan harian
 Route::get('/laporan-harian',[LaporanController::class, 'harian'])->name('laporan.harian');
+Route::get('/laporan-harian/pdf', [LaporanController::class, 'cetakHarian'])->name('laporan.harian.pdf');
+//bulanan
+Route::get('/laporan/bulanan', [LaporanController::class, 'bulanan'])->name('laporan.bulanan');
+Route::get('/laporan-bulanan/pdf', [LaporanController::class, 'bulananPdf'])->name('laporan.bulanan.pdf');
+
 
 });
 

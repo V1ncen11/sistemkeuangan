@@ -15,54 +15,58 @@ class LaporanController extends Controller
 
     public function harian(Request $request)
     {
-        $tanggal = $request->input('tanggal') ?? Carbon::today()->toDateString();
+        $tanggal = $request->input('tanggal', now()->toDateString());
     
-        // 🔹 Ambil Tabungan
+        // Tabungan -> array lalu jadikan base collection
         $tabungan = Tabungan::whereDate('created_at', $tanggal)
             ->with('siswa')
             ->get()
-            ->map(function($t) {
+            ->map(function ($t) {
                 return [
                     'waktu'      => $t->created_at->format('H:i'),
-                    'tipe'       => ucfirst($t->tipe), // setor/tarik
+                    'tipe'       => ucfirst($t->tipe), // setor / tarik
                     'jenis'      => 'Tabungan',
                     'nama'       => $t->siswa->nama ?? '-',
-                    'keterangan' => '-',
-                    'masuk'      => $t->tipe == 'setor' ? $t->jumlah : 0,
-                    'keluar'     => $t->tipe == 'tarik' ? $t->jumlah : 0,
+                    'keterangan' => $t->keterangan ?? '-',
+                    'masuk'      => $t->tipe === 'setor' ? (int)$t->jumlah : 0,
+                    'keluar'     => $t->tipe === 'tarik' ? (int)$t->jumlah : 0,
                 ];
-            });
+            })
+            ->values()
+            ->toBase(); // penting!
     
-        // 🔹 Ambil Pembayaran
+        // Pembayaran -> array lalu jadikan base collection
         $pembayaran = Pembayaran::whereDate('created_at', $tanggal)
-            ->with('siswa')
+            ->with(['siswa', 'jenisPembayaran'])
             ->get()
-            ->map(function($p) {
+            ->map(function ($p) {
                 return [
                     'waktu'      => $p->created_at->format('H:i'),
-                    'tipe'       => '-',
-                    'jenis'      => ucfirst($p->jenis), // pembayaran/pengeluaran
+                    'tipe'       => 'Pembayaran',
+                    'jenis'      => $p->jenisPembayaran->nama_pembayaran ?? '-',
                     'nama'       => $p->siswa->nama ?? '-',
                     'keterangan' => $p->keterangan ?? '-',
-                    'masuk'      => $p->jenis == 'pemasukan' ? $p->jumlah : 0,
-                    'keluar'     => $p->jenis == 'pengeluaran' ? $p->jumlah : 0,
+                    'masuk'      => (int)$p->jumlah,
+                    'keluar'     => 0,
                 ];
-            });
+            })
+            ->values()
+            ->toBase();
     
-        // 🔹 Gabungkan semua transaksi
-        $laporan = $tabungan->merge($pembayaran)->sortBy('waktu')->values();
+        // Gabungkan & urutkan
+        $laporan = $tabungan->concat($pembayaran)->sortBy('waktu')->values();
     
-        // 🔹 Hitung total
+        // Totals
         $totalMasuk  = $laporan->sum('masuk');
         $totalKeluar = $laporan->sum('keluar');
         $saldoAkhir  = $totalMasuk - $totalKeluar;
     
         return view('pages.laporan.harian', [
-            'tanggal'      => Carbon::parse($tanggal)->translatedFormat('d F Y'),
-            'laporan'      => $laporan, 
-            'totalMasuk'   => $totalMasuk,
-            'totalKeluar'  => $totalKeluar,
-            'saldoAkhir'   => $saldoAkhir,
+            'tanggal'     => $tanggal,     // biar <input type="date"> aman
+            'laporan'     => $laporan,     // isinya array
+            'totalMasuk'  => $totalMasuk,
+            'totalKeluar' => $totalKeluar,
+            'saldoAkhir'  => $saldoAkhir,
         ]);
     }
     
@@ -86,21 +90,21 @@ class LaporanController extends Controller
             ];
         });
 
-    $pembayaran = Pembayaran::whereDate('created_at', $tanggal)
-        ->with('siswa')
+        $pembayaran = Pembayaran::whereDate('created_at', $tanggal)
+        ->with(['siswa','jenisPembayaran'])
         ->get()
         ->map(function($p) {
             return [
                 'waktu'      => $p->created_at->format('H:i'),
-                'tipe'       => '-',
-                'jenis'      => ucfirst($p->jenis),
+                'tipe'       => 'Pembayaran',
+                'jenis'      => $p->jenisPembayaran->nama_pembayaran ?? '-',
                 'nama'       => $p->siswa->nama ?? '-',
                 'keterangan' => $p->keterangan ?? '-',
-                'masuk'      => $p->jenis == 'pemasukan' ? $p->jumlah : 0,
-                'keluar'     => $p->jenis == 'pengeluaran' ? $p->jumlah : 0,
+                'masuk'      => $p->jumlah,  // ✅ langsung masuk ke pemasukan
+                'keluar'     => 0,
             ];
         });
-
+    
     $laporan = $tabungan->merge($pembayaran)->sortBy('waktu')->values();
 
     $totalMasuk  = $laporan->sum('masuk');

@@ -10,6 +10,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\KasController;
 use App\Http\Controllers\TabunganController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\RekapTabunganController;
 use App\Http\Controllers\HalutamaController;
 /*
 |--------------------------------------------------------------------------
@@ -123,8 +124,8 @@ Route::get('/laporan-harian/pdf', [LaporanController::class, 'cetakHarian'])->na
 //bulanan
 Route::get('/laporan/bulanan', [LaporanController::class, 'bulanan'])->name('laporan.bulanan');
 Route::get('/laporan-bulanan/pdf', [LaporanController::class, 'bulananPdf'])->name('laporan.bulanan.pdf');
-
-
+Route::get('/rekap-tabungan', [RekapTabunganController::class, 'index'])->name('rekap.tabungan');
+Route::get('/rekap-tabungan/pdf', [RekapTabunganController::class, 'cetakPdf'])->name('rekap.tabungan.pdf');
 });
 
 

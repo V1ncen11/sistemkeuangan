@@ -32,7 +32,6 @@
                     <td>{{ $jenis->tingkat_kelas }}</td>
                     <td>Rp {{ number_format($jenis->jumlah, 0, ',', '.') }}</td>
                     <td>
-                        <a href="#" class="btn btn-sm btn-warning">Edit</a>
                         <button type="button" class="btn btn-danger"
                           data-bs-toggle="modal"
                           data-bs-target="#confirmDeleteModal"
@@ -47,6 +46,7 @@
                 <tr>
                     <td colspan="4">Belum ada data jenis pembayaran.</td>
                 </tr>
+                
                 @endforelse
             </tbody>
         </table>

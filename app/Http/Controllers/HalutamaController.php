@@ -17,7 +17,7 @@ class HalutamaController extends Controller
         $kasKeluar = Kas::where('tipe', 'keluar')->sum('jumlah');
         $kasSekolah = $kasMasuk - $kasKeluar;
 
-        $pengeluaran = $kasKeluar;
+        $totalPengeluaran = $kasKeluar;
         $transaksiTerbaru = Pembayaran::with(['siswa', 'jenisPembayaran'])
         ->orderBy('tanggal', 'desc')
         ->take(5)
@@ -27,7 +27,7 @@ class HalutamaController extends Controller
             'jumlahSiswa',
             'totalTransaksi',
             'kasSekolah',
-            'pengeluaran',
+            'totalPengeluaran',
             'transaksiTerbaru'
         ));
     }

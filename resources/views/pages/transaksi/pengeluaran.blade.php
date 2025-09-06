@@ -43,7 +43,6 @@
           <button type="submit" class="btn btn-success flex-fill" id="btnSubmit">
             <i class="bi bi-save me-2"></i>Simpan Pengeluaran
           </button>
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
         </div>
         
       </form>
@@ -65,31 +64,32 @@
                 </tr>
               </thead>
               <tbody class="text-center">
+          
                 @forelse($pengeluaran as $index => $p)
-                  <tr>
-                    <td>{{ $pengeluaran->firstItem() + $index }}</td>
-                    <td>{{ $p->tanggal }}</td>
-                    <td>{{ $p->jenisPengeluaran->nama }}</td>
-                    <td>Rp. {{ number_format($p->jumlah,0,',','.') }}</td>
-                    <td>{{ $p->deskripsi}}</td>
-                    <td>
-                      <button type="button" 
+                <tr>
+                  <td>{{ $pengeluaran->firstItem() + $index }}</td>
+                  <td>{{ $p->tanggal }}</td>
+                  <td>{{ $p->jenisPengeluaran->nama ?? '-' }}</td>
+                  <td>Rp. {{ number_format($p->jumlah,0,',','.') }}</td>
+                  <td>{{ $p->deskripsi }}</td>
+                  <td>
+                    <button type="button" 
                       class="btn btn-sm btn-danger"
                       data-bs-toggle="modal"
                       data-bs-target="#confirmDeleteModal"
                       data-id="{{ $p->id }}"
-                      data-nama="{{ $p->jenisPengeluaran->nama }}"
+                      data-nama="{{ $p->jenisPengeluaran->nama ?? '-' }}"
                       data-url="{{ route('pengeluaran.destroy', $p->id) }}">
-                  <i class="fa-solid fa-trash"></i>
-              </button>
-                  
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
                   </td>
-                  </tr>
-                @empty
-                  <tr>
-                    <td colspan="5">Belum ada data pengeluaran.</td>
-                  </tr>
-            @endforelse
+                </tr>
+              @empty
+                <tr>
+                  <td colspan="6">Belum ada data pengeluaran.</td>
+                </tr>
+              @endforelse
+              
           </tbody>      
         </table>
         {{ $pengeluaran->links() }}

@@ -26,7 +26,7 @@
   <div class="col-md-3">
     <div class="card bg-danger text-white shadow-sm rounded-4 p-3">
       <h6>Pengeluaran</h6>
-      <h3>Rp {{ number_format($pengeluaran, 0, ',', '.') }}</h3>
+      <h3>Rp {{ number_format($totalPengeluaran, 0, ',', '.') }}</h3>
     </div>
   </div>
 </div>

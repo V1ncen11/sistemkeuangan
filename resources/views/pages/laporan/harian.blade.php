@@ -73,9 +73,10 @@
             <tr>
               <td>{{ $i+1 }}</td>
               <td>{{ $t['waktu'] }}</td>
+              <td>{{ $t['nama'] }}</td>
               <td>{{ ucfirst($t['tipe']) }}</td>
               <td>{{ $t['jenis'] }}</td>  
-              <td>{{ $t['nama'] }}</td>
+              
               <td>{{ $t['keterangan'] ?? '-' }}</td>
               <td>{{ number_format($t['masuk'], 0, ',', '.') }}</td>
               <td>{{ number_format($t['keluar'], 0, ',', '.') }}</td>

@@ -48,9 +48,11 @@
           <!-- Perlu diperhatikan: menggunakan <a> untuk tombol login tidak ideal -->
             <div class="d-grid">
               <button type="submit" class="btn btn-primary">Login</button>
+             
           </div>
         </div>
       </form>
+      <a href="{{ route('register.form')}}">Buat akun baru?</a>
     </div>
   </div>
 

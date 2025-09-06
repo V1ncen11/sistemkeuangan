@@ -25,7 +25,9 @@ use App\Http\Controllers\HalutamaController;
 
 
 
-Route::get('/', [HalutamaController::class, 'index'])->name('login');
+Route::get('/', function () {
+    return redirect()->route('login');
+});
 
 
 
@@ -33,6 +35,11 @@ Route::get('/', [HalutamaController::class, 'index'])->name('login');
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+
+    
+//regist
+Route::get('/register-form', [AuthController::class, 'showRegisterForm'])->name('register.form');
+Route::post('/register', [AuthController::class, 'register'])->name('register');
 });
 
 // Routes untuk user yang sudah login
@@ -126,6 +133,7 @@ Route::get('/laporan/bulanan', [LaporanController::class, 'bulanan'])->name('lap
 Route::get('/laporan-bulanan/pdf', [LaporanController::class, 'bulananPdf'])->name('laporan.bulanan.pdf');
 Route::get('/rekap-tabungan', [RekapTabunganController::class, 'index'])->name('rekap.tabungan');
 Route::get('/rekap-tabungan/pdf', [RekapTabunganController::class, 'cetakPdf'])->name('rekap.tabungan.pdf');
+
 });
 
 

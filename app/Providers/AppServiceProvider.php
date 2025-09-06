@@ -40,7 +40,7 @@ class AppServiceProvider extends ServiceProvider
             $kasMasuk = Kas::where('tipe', 'masuk')->sum('jumlah');
             $kasKeluar = Kas::where('tipe', 'keluar')->sum('jumlah');
             $kasSekolah = $kasMasuk - $kasKeluar;
-            $pengeluaran = $kasKeluar;
+            $totalPengeluaran = $kasKeluar;
         
             // Transaksi terbaru (5 terakhir)
             $transaksiTerbaru = Pembayaran::latest()->take(5)->get();
@@ -51,7 +51,7 @@ class AppServiceProvider extends ServiceProvider
                 'kasMasuk',
                 'kasKeluar',
                 'kasSekolah',
-                'pengeluaran',
+                'totalPengeluaran',
                 'transaksiTerbaru'
             ));
         });

@@ -9,15 +9,19 @@ class PengeluaranController extends Controller
 {
     public function index()
     {
-           $pengeluaran = Pengeluaran::with('jenisPengeluaran')
-        ->orderBy('tanggal', 'desc')->orderBy('id', 'asc') // urutkan berdasarkan tanggal terbaru
-        ->paginate(5);
+        // list pengeluaran (buat ditampilkan di tabel)
+        $pengeluaran = Pengeluaran::with('jenisPengeluaran')
+            ->orderBy('tanggal', 'desc')
+            ->orderBy('id', 'asc')
+            ->paginate(5);
+    
+        // dropdown jenis pengeluaran
+        $jenisPengeluaran = JenisPengeluaran::all();
+    
+        return view('pages.transaksi.pengeluaran', compact('pengeluaran', 'jenisPengeluaran'));
 
-
-    $jenisPengeluaran = JenisPengeluaran::all();
-
-    return view('pages.transaksi.pengeluaran', compact('pengeluaran', 'jenisPengeluaran'));
-}
+    }
+    
 public function store(Request $request)
 {
     $request->validate([
@@ -35,9 +39,9 @@ $pengeluaran = Pengeluaran::create([
     ]);
     KasController::fromPengeluaran($pengeluaran);
     
-    return redirect()
-        ->route('pengeluaran.index')
-        ->with('success', 'Pengeluaran berhasil ditambahkan.');
+    return redirect()->route('pengeluaran.index')
+    ->with('success', 'Pengeluaran berhasil ditambahkan.');
+
 }
 
 public function destroy($id)

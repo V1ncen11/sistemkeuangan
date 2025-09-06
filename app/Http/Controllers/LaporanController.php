@@ -23,13 +23,15 @@ class LaporanController extends Controller
             ->get()
             ->map(function ($t) {
                 return [
+                  
+                
                     'waktu'      => $t->created_at->format('H:i'),
-                    'tipe'       => ucfirst($t->tipe), // setor / tarik
-                    'jenis'      => 'Tabungan',
                     'nama'       => $t->siswa->nama ?? '-',
-                    'keterangan' => $t->keterangan ?? '-',
-                    'masuk'      => $t->tipe === 'setor' ? (int)$t->jumlah : 0,
-                    'keluar'     => $t->tipe === 'tarik' ? (int)$t->jumlah : 0,
+                    'tipe'       => 'Tabungan',               // selalu Tabungan
+                    'jenis'      => ucfirst($t->tipe),        // Setor / Tarik
+                    'keterangan' => '-',
+                    'masuk'      => $t->tipe == 'setor' ? (int) $t->jumlah : 0,
+                    'keluar'     => $t->tipe == 'tarik' ? (int) $t->jumlah : 0,
                 ];
             })
             ->values()
@@ -41,14 +43,15 @@ class LaporanController extends Controller
             ->get()
             ->map(function ($p) {
                 return [
+            
                     'waktu'      => $p->created_at->format('H:i'),
-                    'tipe'       => 'Pembayaran',
-                    'jenis'      => $p->jenisPembayaran->nama_pembayaran ?? '-',
                     'nama'       => $p->siswa->nama ?? '-',
+                    'tipe'       => 'Pembayaran',                             // selalu Pembayaran
+                    'jenis'      => $p->jenisPembayaran->nama_pembayaran ?? '-', // contoh: UANG MBG
                     'keterangan' => $p->keterangan ?? '-',
-                    'masuk'      => (int)$p->jumlah,
+                    'masuk'      => (int) $p->jumlah,
                     'keluar'     => 0,
-                ];
+];
             })
             ->values()
             ->toBase();
@@ -100,7 +103,7 @@ class LaporanController extends Controller
                 'jenis'      => $p->jenisPembayaran->nama_pembayaran ?? '-',
                 'nama'       => $p->siswa->nama ?? '-',
                 'keterangan' => $p->keterangan ?? '-',
-                'masuk'      => $p->jumlah,  // ✅ langsung masuk ke pemasukan
+                'masuk'      => $p->jumlah, 
                 'keluar'     => 0,
             ];
         });
@@ -118,11 +121,13 @@ class LaporanController extends Controller
 
     return $pdf->download('laporan-harian-'.$tanggal.'.pdf');
 }
+
 public function bulanan(Request $request)
 {
     $bulan = $request->input('bulan') ?? now()->format('m');
     $tahun = $request->input('tahun') ?? now()->year;
 
+    // 🔹 Ambil data Tabungan
     $tabungan = Tabungan::whereYear('created_at', $tahun)
         ->whereMonth('created_at', $bulan)
         ->with('siswa')
@@ -130,34 +135,35 @@ public function bulanan(Request $request)
         ->map(function($t) {
             return [
                 'tanggal'    => $t->created_at->format('d-m-Y'),
-                'tipe'       => ucfirst($t->tipe),
-                'jenis'      => 'Tabungan',
+
                 'nama'       => $t->siswa->nama ?? '-',
+                'tipe'       => 'Tabungan',             // selalu Tabungan
+                'jenis'      => ucfirst($t->tipe),      // Setor / Tarik
                 'keterangan' => '-',
-                'masuk'      => $t->tipe == 'setor' ? $t->jumlah : 0,
-                'keluar'     => $t->tipe == 'tarik' ? $t->jumlah : 0,
+                'masuk'      => $t->tipe == 'setor' ? (int) $t->jumlah : 0,
+                'keluar'     => $t->tipe == 'tarik' ? (int) $t->jumlah : 0,
             ];
         });
 
     // 🔹 Ambil data Pembayaran
     $pembayaran = Pembayaran::whereYear('created_at', $tahun)
         ->whereMonth('created_at', $bulan)
-        ->with('siswa')
+        ->with(['siswa','jenisPembayaran'])
         ->get()
         ->map(function($p) {
             return [
                 'tanggal'    => $p->created_at->format('d-m-Y'),
-                'tipe'       => '-',
-                'jenis'      => ucfirst($p->jenis),
                 'nama'       => $p->siswa->nama ?? '-',
+                'tipe'       => 'Pembayaran',                             // selalu Pembayaran
+                'jenis'      => $p->jenisPembayaran->nama_pembayaran ?? '-', // contoh: UANG MBG
                 'keterangan' => $p->keterangan ?? '-',
-                'masuk'      => $p->jenis == 'pemasukan' ? $p->jumlah : 0,
-                'keluar'     => $p->jenis == 'pengeluaran' ? $p->jumlah : 0,
+                'masuk'      => (int) $p->jumlah,
+                'keluar'     => 0,
             ];
         });
 
-$laporan = $tabungan->concat($pembayaran)->sortBy('tanggal')->values();
-
+    // 🔹 Gabung semua transaksi
+    $laporan = $tabungan->concat($pembayaran)->sortBy('tanggal')->values();
 
     // 🔹 Hitung total
     $totalMasuk  = $laporan->sum('masuk');
@@ -173,6 +179,7 @@ $laporan = $tabungan->concat($pembayaran)->sortBy('tanggal')->values();
         'tahun'       => $tahun,
     ]);
 }
+
 public function bulananPdf(Request $request)
 {
     $bulan = $request->input('bulan') ?? date('m');
